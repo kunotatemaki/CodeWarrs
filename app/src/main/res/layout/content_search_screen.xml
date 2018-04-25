@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
-            android:id="@+id/name_imput"
+            android:id="@+id/name_input"
             layout="@layout/send_card"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"

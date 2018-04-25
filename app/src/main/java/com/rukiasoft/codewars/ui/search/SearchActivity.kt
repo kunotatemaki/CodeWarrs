@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.rukiasoft.codewars.R
 import com.rukiasoft.codewars.databinding.ActivitySearchScreenBinding
+import com.rukiasoft.codewars.databinding.GlideBindingComponent
 
 class SearchActivity : BaseActivity() {
 
@@ -20,16 +22,16 @@ class SearchActivity : BaseActivity() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchViewModel::class.java)
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search_screen)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search_screen, GlideBindingComponent())
 
         viewModel.animateFab.observe(this, Observer {
             it?.let {
-                if(it){
+                if (it) {
                     //animate transition
-                    if(viewModel.isInSearchMode()){
-                        searchToSend()
-                    }else{
+                    if (viewModel.searchCardVisible.get()) {
                         sendToSearch()
+                    } else {
+                        searchToSend()
                     }
 
                     //reset value
@@ -45,27 +47,28 @@ class SearchActivity : BaseActivity() {
 
         }
 
-        if(viewModel.isInSearchMode()) {
+        mBinding.content.nameInput.visible = viewModel.searchCardVisible
+        if (viewModel.searchCardVisible.get().not()) {
             mBinding.fab.setImageDrawable(resourcesManager.getDrawable(R.drawable.ic_search_white_24dp))
-        }else{
+        } else {
             mBinding.fab.setImageDrawable(resourcesManager.getDrawable(R.drawable.ic_send_white_24dp))
         }
     }
 
-    private fun searchToSend(){
+    private fun searchToSend() {
         //animate the button
         val avd = AnimatedVectorDrawableCompat.create(this.applicationContext, R.drawable.avd_anim_search_to_send)
         mBinding.fab.setImageDrawable(avd)
         avd?.start()
-        viewModel.setStateAsToSend()
+        viewModel.searchCardVisible.set(true)
     }
 
-    private fun sendToSearch(){
+    private fun sendToSearch() {
         //animate the button
         val avd = AnimatedVectorDrawableCompat.create(this.applicationContext, R.drawable.avd_anim_send_to_search)
         mBinding.fab.setImageDrawable(avd)
         avd?.start()
-        viewModel.setStateAsSearching()
+        viewModel.searchCardVisible.set(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
