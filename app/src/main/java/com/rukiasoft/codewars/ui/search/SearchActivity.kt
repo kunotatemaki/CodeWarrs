@@ -1,14 +1,13 @@
 package com.rukiasoft.codewars.ui.search
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.view.Menu
 import android.view.MenuItem
 import com.rukiasoft.codewars.R
-import dagger.android.support.DaggerAppCompatActivity
-
 import kotlinx.android.synthetic.main.activity_search_screen.*
 import timber.log.Timber
 
@@ -21,15 +20,52 @@ class SearchActivity : BaseActivity() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchViewModel::class.java)
 
-        Timber.d("di test: %s", viewModel.getTestText())
-
         setContentView(R.layout.activity_search_screen)
+
+        viewModel.animateFab.observe(this, Observer {
+            it?.let {
+                if(it){
+                    //animate transition
+                    if(viewModel.isInSearchMode()){
+                        searchToSend()
+                    }else{
+                        sendToSearch()
+                    }
+
+                    //reset value
+                    viewModel.animateFab.value = false
+                }
+            }
+        })
+
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            viewModel.animateFab.value = true
+
         }
+
+        if(viewModel.isInSearchMode()) {
+            fab.setImageDrawable(resourcesManager.getDrawable(R.drawable.ic_search_white_24dp))
+        }else{
+            fab.setImageDrawable(resourcesManager.getDrawable(R.drawable.ic_send_white_24dp))
+        }
+    }
+
+    private fun searchToSend(){
+        //animate the button
+        val avd = AnimatedVectorDrawableCompat.create(fab.context, R.drawable.avd_anim_search_to_send)
+        fab.setImageDrawable(avd)
+        avd?.start()
+        viewModel.setStateAsToSend()
+    }
+
+    private fun sendToSearch(){
+        //animate the button
+        val avd = AnimatedVectorDrawableCompat.create(fab.context, R.drawable.avd_anim_send_to_search)
+        fab.setImageDrawable(avd)
+        avd?.start()
+        viewModel.setStateAsSearching()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

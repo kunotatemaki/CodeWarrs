@@ -2,6 +2,7 @@ package com.rukiasoft.codewars.di.components
 
 import com.rukiasoft.codewars.CodeWarsApplicationBase
 import com.rukiasoft.codewars.di.modules.ActivityBuilder
+import com.rukiasoft.codewars.di.modules.CodeWarsModule
 import com.rukiasoft.codewars.di.modules.FragmentsProvider
 import com.rukiasoft.codewars.di.modules.ViewModelModule
 import dagger.BindsInstance
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [(AndroidSupportInjectionModule::class),
-    (ActivityBuilder::class),
+    (ActivityBuilder::class), (CodeWarsModule::class),
     (FragmentsProvider::class), (FragmentsProvider::class),
     (ViewModelModule::class)])
 interface CodeWarsComponent : AndroidInjector<CodeWarsApplicationBase>  {
