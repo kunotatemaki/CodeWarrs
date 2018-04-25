@@ -1,17 +1,28 @@
-package com.rukiasoft.codewarrs
+package com.rukiasoft.codewars.ui.search
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.rukiasoft.codewars.R
+import dagger.android.support.DaggerAppCompatActivity
 
 import kotlinx.android.synthetic.main.activity_search_screen.*
+import timber.log.Timber
 
-class SearchScreen : AppCompatActivity() {
+class SearchActivity : BaseActivity() {
+
+    private lateinit var viewModel: SearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchViewModel::class.java)
+
+        Timber.d("di test: %s", viewModel.getTestText())
+
         setContentView(R.layout.activity_search_screen)
         setSupportActionBar(toolbar)
 

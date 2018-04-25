@@ -1,4 +1,4 @@
-package com.rukiasoft.codewarrs
+package com.rukiasoft.codewars
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

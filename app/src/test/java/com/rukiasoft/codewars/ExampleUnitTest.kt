@@ -1,4 +1,4 @@
-package com.rukiasoft.codewarrs
+package com.rukiasoft.codewars
 
 import org.junit.Test
 
