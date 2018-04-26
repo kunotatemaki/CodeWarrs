@@ -5,8 +5,14 @@ import android.animation.AnimatorListenerAdapter
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
+import android.graphics.Canvas
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewAnimationUtils
@@ -15,6 +21,8 @@ import com.rukiasoft.codewars.R
 import com.rukiasoft.codewars.databinding.ActivitySearchScreenBinding
 import com.rukiasoft.codewars.databinding.GlideBindingComponent
 import com.rukiasoft.codewars.model.RevealCoordinates
+import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
+import com.rukiasoft.codewars.ui.common.BaseActivity
 import com.rukiasoft.codewars.utils.DeviceUtils
 import com.rukiasoft.codewars.vo.Status
 import timber.log.Timber
@@ -27,6 +35,7 @@ class SearchActivity : BaseActivity() {
 
     private lateinit var viewModel: SearchViewModel
     private lateinit var mBinding: ActivitySearchScreenBinding
+    private lateinit var mRecyclerView: RecyclerView
 
     private var revealCoordinates = RevealCoordinates()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +46,9 @@ class SearchActivity : BaseActivity() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search_screen, GlideBindingComponent())
 
         mBinding.swipeRefresh.isEnabled = false
+
+        //get the recycler
+        mRecyclerView = mBinding.content.users
 
         viewModel.animateFab.observe(this, Observer {
             it?.let {
@@ -87,7 +99,7 @@ class SearchActivity : BaseActivity() {
         //Listen for users
         viewModel.users.observe(this, Observer {
             it?.let {
-                Timber.d("users recieved")
+                populateList(it)
             }
         })
 
@@ -104,6 +116,33 @@ class SearchActivity : BaseActivity() {
         } else {
             mBinding.fab.setImageDrawable(resourcesManager.getDrawable(R.drawable.ic_send_white_24dp))
         }
+    }
+
+
+    private fun populateList(users: List<UserWithAllInfo>){
+        // use a linear layout manager
+        val mLayoutManager = LinearLayoutManager(this.applicationContext, LinearLayoutManager.VERTICAL, false)
+        mRecyclerView.layoutManager = mLayoutManager
+
+        //add a divider decorator
+        val dividerItemDecoration = DividerItemDecoration(mRecyclerView.context,
+                DividerItemDecoration.VERTICAL)
+        mRecyclerView.addItemDecoration(dividerItemDecoration)
+
+
+        //add the adapter
+        val adapter = SearchAdapter(
+                object : SearchAdapter.UserCallback {
+                    override fun onClick(user: UserWithAllInfo?) {
+                        user?.let {
+                            Timber.d("clicked")
+                        }
+                    }
+                },
+                users)
+
+        mRecyclerView.adapter = adapter
+
     }
 
     private fun showLoading() {
@@ -130,6 +169,7 @@ class SearchActivity : BaseActivity() {
         mBinding.fab.setImageDrawable(avd)
         avd?.start()
         hideCardAnimated()
+        mBinding.content.nameInput.tagInput.text.clear()
     }
 
     private fun showCardAnimated() {

@@ -48,7 +48,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/fab"
                     app:layout_constraintTop_toTopOf="@+id/fab"
-                    android:text="g964" />
+                    tools:text="g964" />
             </android.support.design.widget.TextInputLayout>
 
 

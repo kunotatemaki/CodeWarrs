@@ -7,7 +7,7 @@ import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean
 import com.google.gson.Gson
 import com.rukiasoft.codewars.persistence.PersistenceManager
-import com.rukiasoft.codewars.persistence.entities.UserInfo
+import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
 import com.rukiasoft.codewars.repository.UserInfoError
 import com.rukiasoft.codewars.repository.UserInfoRequests
 import com.rukiasoft.codewars.utils.Constants
@@ -25,7 +25,7 @@ class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfo
 
     private val query = MutableLiveData<Long>()
 
-    val users: LiveData<List<UserInfo>>
+    val users: LiveData<List<UserWithAllInfo>>
 
     var userInfo: MediatorLiveData<Resource<Void>> = MediatorLiveData()
 
@@ -41,7 +41,7 @@ class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfo
     }
 
     fun search(name: String) {
-        val info = userInfoRequests.downloadUserInfo(name.toLowerCase(), Constants.DEFAULT_NUMBER_OF_RETRIES)
+        val info = userInfoRequests.downloadUserInfo(name, Constants.DEFAULT_NUMBER_OF_RETRIES)
         userInfo.addSource(info, {
             it?.let { response ->
                 when (response.status) {
@@ -68,7 +68,7 @@ class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfo
         })
     }
 
-    private fun getListOfUsers(): LiveData<List<UserInfo>> {
+    private fun getListOfUsers(): LiveData<List<UserWithAllInfo>> {
         return if (usersByDate) {
             persistenceManager.getListUsersByDate()
         } else {

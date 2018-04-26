@@ -1,4 +1,4 @@
-package com.rukiasoft.codewars.ui.search
+package com.rukiasoft.codewars.ui.common
 
 import android.arch.lifecycle.ViewModelProvider
 import com.rukiasoft.codewars.utils.ResourcesManager

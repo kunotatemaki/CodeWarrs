@@ -17,7 +17,7 @@ class Language constructor(@PrimaryKey
                            @ColumnInfo(name = "user_name")
                            val userName: String,
                            @ColumnInfo(name = "language_name")
-                           val language_name: String,
+                           val languageName: String,
                            @ColumnInfo(name = "rank")
                            val rank: Int?,
                            @ColumnInfo(name = "name")
@@ -32,7 +32,7 @@ class Language constructor(@PrimaryKey
 
     fun compareTo(user: Language): Boolean {
         return (userName == user.userName)
-                .and(language_name == user.language_name)
+                .and(languageName == user.languageName)
                 .and(name == user.name)
                 .and(rank == user.rank)
                 .and(score == user.score)
