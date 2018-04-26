@@ -3,8 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.rukiasoft.codewars.SearchScreen">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_order_by_date"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_order_by_date"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_order_by_rank"
+        android:orderInCategory="101"
+        android:title="@string/action_order_by_rank"
         app:showAsAction="never" />
 </menu>

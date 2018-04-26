@@ -1,36 +1,49 @@
 package com.rukiasoft.codewars.ui.search
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean
 import com.google.gson.Gson
+import com.rukiasoft.codewars.persistence.PersistenceManager
 import com.rukiasoft.codewars.persistence.entities.UserInfo
 import com.rukiasoft.codewars.repository.UserInfoError
 import com.rukiasoft.codewars.repository.UserInfoRequests
 import com.rukiasoft.codewars.utils.Constants
+import com.rukiasoft.codewars.utils.switchMap
 import com.rukiasoft.codewars.vo.Resource
 import com.rukiasoft.codewars.vo.Status
-import timber.log.Timber
 import javax.inject.Inject
 
 
-class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfoRequests) : ViewModel() {
+class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfoRequests,
+                                          private val persistenceManager: PersistenceManager) : ViewModel() {
 
     var animateFab: MutableLiveData<Boolean> = MutableLiveData()
     var searchCardVisible = ObservableBoolean()
 
+    private val query = MutableLiveData<Long>()
+
+    val users: LiveData<List<UserInfo>>
+
     var userInfo: MediatorLiveData<Resource<Void>> = MediatorLiveData()
+
+    var usersByDate = true
 
     init {
         searchCardVisible.set(false)
         animateFab.value = false
+        query.value = System.currentTimeMillis()
+        users = query.switchMap { _ ->
+            getListOfUsers()
+        }
     }
 
     fun search(name: String) {
-        val info = userInfoRequests.downloadUserInfo(name, Constants.DEFAULT_NUMBER_OF_RETRIES)
+        val info = userInfoRequests.downloadUserInfo(name.toLowerCase(), Constants.DEFAULT_NUMBER_OF_RETRIES)
         userInfo.addSource(info, {
-            it?.let {response ->
+            it?.let { response ->
                 when (response.status) {
 
                     Status.SUCCESS -> {
@@ -41,10 +54,10 @@ class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfo
                         val message = try {
                             val userError: UserInfoError = Gson().fromJson(response.message, UserInfoError::class.java)
                             userError.reason
-                        }catch (e: Exception){
+                        } catch (e: Exception) {
                             ""
                         }
-                        userInfo.value = Resource.error(message,null)
+                        userInfo.value = Resource.error(message, null)
                         userInfo.removeSource(info)
                     }
                     Status.LOADING -> {
@@ -55,6 +68,22 @@ class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfo
         })
     }
 
+    private fun getListOfUsers(): LiveData<List<UserInfo>> {
+        return if (usersByDate) {
+            persistenceManager.getListUsersByDate()
+        } else {
+            persistenceManager.getListUsersByRank()
+        }
+    }
 
+    fun getUsersByDate() {
+        usersByDate = true
+        query.value = System.currentTimeMillis()
+    }
+
+    fun getUsersByRank() {
+        usersByDate = false
+        query.value = System.currentTimeMillis()
+    }
 
 }

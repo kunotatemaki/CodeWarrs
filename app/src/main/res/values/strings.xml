@@ -4,4 +4,6 @@
     <string name="member_name">Type a member name</string>
     <string name="empty_name">Name cannot be empty</string>
     <string name="error_request">Error from server</string>
+    <string name="action_order_by_date">Order by date</string>
+    <string name="action_order_by_rank">Order by rank</string>
 </resources>

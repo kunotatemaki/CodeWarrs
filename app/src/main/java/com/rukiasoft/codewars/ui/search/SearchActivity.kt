@@ -17,6 +17,7 @@ import com.rukiasoft.codewars.databinding.GlideBindingComponent
 import com.rukiasoft.codewars.model.RevealCoordinates
 import com.rukiasoft.codewars.utils.DeviceUtils
 import com.rukiasoft.codewars.vo.Status
+import timber.log.Timber
 import javax.inject.Inject
 
 class SearchActivity : BaseActivity() {
@@ -80,6 +81,13 @@ class SearchActivity : BaseActivity() {
                         showLoading()
                     }
                 }
+            }
+        })
+
+        //Listen for users
+        viewModel.users.observe(this, Observer {
+            it?.let {
+                Timber.d("users recieved")
             }
         })
 
@@ -167,16 +175,22 @@ class SearchActivity : BaseActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
+        when (item.itemId) {
+            R.id.action_order_by_date -> {
+                viewModel.getUsersByDate()
+            }
+            R.id.action_order_by_rank -> {
+                viewModel.getUsersByRank()
+            }
             else -> super.onOptionsItemSelected(item)
         }
+        return true
     }
 
     override fun onBackPressed() {
-        if(viewModel.searchCardVisible.get()){
+        if (viewModel.searchCardVisible.get()) {
             viewModel.animateFab.value = true
-        }else {
+        } else {
             super.onBackPressed()
         }
     }
