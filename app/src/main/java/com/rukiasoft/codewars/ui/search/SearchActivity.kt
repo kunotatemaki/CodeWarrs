@@ -42,7 +42,14 @@ class SearchActivity : BaseActivity() {
                 if (it) {
                     //animate transition
                     if (viewModel.searchCardVisible.get()) {
-                        sendToSearch()
+
+                        if(mBinding.content.nameInput.tagInput.text.isBlank()){
+                            mBinding.content.nameInput.tagInputLayout.error = resourcesManager.getString(R.string.empty_name)
+                        }else {
+                            viewModel.search(mBinding.content.nameInput.tagInput.text.toString())
+                            sendToSearch()
+
+                        }
                     } else {
                         searchToSend()
                     }
@@ -50,6 +57,12 @@ class SearchActivity : BaseActivity() {
                     //reset value
                     viewModel.animateFab.value = false
                 }
+            }
+        })
+
+        viewModel.userInfo.observe(this, Observer {
+            it?.let {
+                Timber.d("")
             }
         })
 
@@ -87,7 +100,6 @@ class SearchActivity : BaseActivity() {
 
     private fun showCardAnimated(){
         val x = mBinding.fab.right - (mBinding.fab.width / 2)
-        val y = mBinding.fab.bottom - (mBinding.fab.height / 2)
         revealCoordinates.cx = x - deviceUtils.dipToPixels(8f).toInt()
         revealCoordinates.cy = (mBinding.content.nameInput.container.bottom - mBinding.content.nameInput.container.top)/2
         revealCoordinates.initialRadius = ((mBinding.fab.right - mBinding.fab.left) / 2).toFloat()

@@ -48,7 +48,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/fab"
                     app:layout_constraintTop_toTopOf="@+id/fab"
-                    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor arcu id elit dictum pharetra. Nunc elementum magna ligula, sit amet lobortis libero semper sit amet. Nulla quis massa quis nisl gravida scelerisque nec et libero. Sed eleifend cursus egestas. Integer eget varius lacus. Fusce elementum, orci id auctor porttitor, diam nunc condimentum massa, ut scelerisque arcu tortor vel turpis. Curabitur ut dictum nunc. Donec tempus fringilla tortor sit amet feugiat. Integer varius non felis non maximus. In iaculis felis justo, ut facilisis quam molestie vitae. Phasellus ac condimentum augue. Sed cursus velit nec eros feugiat finibus. Praesent malesuada est non ipsum viverra, vel tempor lorem placerat." />
+                    android:text="g964" />
             </android.support.design.widget.TextInputLayout>
 
 
