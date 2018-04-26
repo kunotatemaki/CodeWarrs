@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey
 
 /**
  * Created by Roll on 21/11/17.
- * Entity for User Info
+ * Entity for skills
  */
 
 @Entity(tableName = "skill", indices = [(Index(value = arrayOf("user_name", "skill"), unique = true))])
