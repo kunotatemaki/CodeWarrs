@@ -172,4 +172,12 @@ class SearchActivity : BaseActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    override fun onBackPressed() {
+        if(viewModel.searchCardVisible.get()){
+            viewModel.animateFab.value = true
+        }else {
+            super.onBackPressed()
+        }
+    }
 }
