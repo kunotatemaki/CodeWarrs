@@ -6,4 +6,8 @@
     <string name="error_request">Error from server</string>
     <string name="action_order_by_date">Order by date</string>
     <string name="action_order_by_rank">Order by rank</string>
+    <string name="position">Position:</string>
+    <string name="name">Name:</string>
+    <string name="language">Best Language:</string>
+    <string name="score">Score:</string>
 </resources>
