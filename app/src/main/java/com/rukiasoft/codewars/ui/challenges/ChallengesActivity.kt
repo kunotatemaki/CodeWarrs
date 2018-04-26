@@ -1,12 +1,21 @@
 package com.rukiasoft.codewars.ui.challenges
 
+import android.arch.lifecycle.ViewModelProviders
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
 import com.rukiasoft.codewars.R
+import com.rukiasoft.codewars.databinding.ActivityChallengesBinding
+import com.rukiasoft.codewars.databinding.GlideBindingComponent
+import com.rukiasoft.codewars.ui.common.BaseActivity
 import kotlinx.android.synthetic.main.activity_challenges.*
 
-class ChallengesActivity : AppCompatActivity() {
+class ChallengesActivity : BaseActivity() {
+
+    private lateinit var viewModel: ChallengesViewModel
+    private lateinit var mBinding: ActivityChallengesBinding
+    private lateinit var mRecyclerView: RecyclerView
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -24,7 +33,10 @@ class ChallengesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_challenges)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ChallengesViewModel::class.java)
+
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_challenges, GlideBindingComponent())
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 }
