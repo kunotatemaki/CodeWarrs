@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.graphics.Canvas
 import android.os.Bundle
@@ -22,6 +23,7 @@ import com.rukiasoft.codewars.databinding.ActivitySearchScreenBinding
 import com.rukiasoft.codewars.databinding.GlideBindingComponent
 import com.rukiasoft.codewars.model.RevealCoordinates
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
+import com.rukiasoft.codewars.ui.challenges.ChallengesActivity
 import com.rukiasoft.codewars.ui.common.BaseActivity
 import com.rukiasoft.codewars.utils.DeviceUtils
 import com.rukiasoft.codewars.vo.Status
@@ -135,7 +137,8 @@ class SearchActivity : BaseActivity() {
                 object : SearchAdapter.UserCallback {
                     override fun onClick(user: UserWithAllInfo?) {
                         user?.let {
-                            Timber.d("clicked %s", user.user?.userName)
+                            val intent = Intent(this@SearchActivity, ChallengesActivity::class.java)
+                            startActivity(intent)
                         }
                     }
                 },

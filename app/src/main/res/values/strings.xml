@@ -10,4 +10,10 @@
     <string name="name">Name:</string>
     <string name="language">Best Language:</string>
     <string name="score">Score:</string>
+    <string name="title_activity_challenges">Challenges</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_completed">Completed</string>
+    <string name="title_authored">Authored</string>
 </resources>
