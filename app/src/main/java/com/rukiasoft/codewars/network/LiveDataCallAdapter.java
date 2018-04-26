@@ -47,7 +47,7 @@ class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiResponse<R>>>
                                 retries--;
                                 call.clone().enqueue(this);
                             }else {
-                                postValue(new ApiResponse<>(response));
+                                postValue(responseWrapped);
                             }
                         }
 

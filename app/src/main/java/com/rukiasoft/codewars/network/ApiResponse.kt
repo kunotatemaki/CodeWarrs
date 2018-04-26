@@ -44,7 +44,7 @@ class ApiResponse<T> {
             if (message == null || message.trim { it <= ' ' }.isEmpty()) {
                 message = response.message()
             }
-            errorMessage = message
+            errorMessage = message.toString()
             body = null
         }
         val linkHeader = response.headers().get("link")

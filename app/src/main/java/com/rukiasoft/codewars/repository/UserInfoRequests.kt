@@ -67,8 +67,7 @@ constructor(private val codeWarsServiceFactory: CodeWarsServiceFactory,
             }
 
             override fun onFetchFailed() {
-                //hacer que ha fallado
-                Timber.d("ha fallado")
+                //something went wrong
             }
         }.asLiveData()
     }

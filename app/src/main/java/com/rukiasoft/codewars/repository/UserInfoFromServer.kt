@@ -11,6 +11,14 @@ class UserInfoFromServer {
     var userName: String? = null
 
     @Expose
+    @SerializedName("success")
+    var success: String? = null
+
+    @Expose
+    @SerializedName("reason")
+    var reason: String? = null
+
+    @Expose
     @SerializedName("name")
     var name: String? = null
 

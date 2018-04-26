@@ -9,16 +9,14 @@ import android.os.Bundle
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewAnimationUtils
+import android.widget.Toast
 import com.rukiasoft.codewars.R
 import com.rukiasoft.codewars.databinding.ActivitySearchScreenBinding
 import com.rukiasoft.codewars.databinding.GlideBindingComponent
 import com.rukiasoft.codewars.model.RevealCoordinates
 import com.rukiasoft.codewars.utils.DeviceUtils
-import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.activity_search_screen.view.*
-import timber.log.Timber
+import com.rukiasoft.codewars.vo.Status
 import javax.inject.Inject
 
 class SearchActivity : BaseActivity() {
@@ -62,7 +60,20 @@ class SearchActivity : BaseActivity() {
 
         viewModel.userInfo.observe(this, Observer {
             it?.let {
-                Timber.d("")
+                when(it.status){
+
+                    Status.SUCCESS -> {hideLoading()}
+                    Status.ERROR -> {
+                        hideLoading()
+                        val message = if(it.message.isNullOrBlank()){
+                            resourcesManager.getString(R.string.error_request)
+                        }else{
+                            it.message
+                        }
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    }
+                    Status.LOADING -> {showLoading()}
+                }
             }
         })
 
@@ -79,6 +90,14 @@ class SearchActivity : BaseActivity() {
         } else {
             mBinding.fab.setImageDrawable(resourcesManager.getDrawable(R.drawable.ic_send_white_24dp))
         }
+    }
+
+    private fun showLoading(){
+
+    }
+
+    private fun hideLoading(){
+
     }
 
     private fun searchToSend() {
