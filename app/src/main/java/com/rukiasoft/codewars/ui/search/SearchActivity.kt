@@ -35,15 +35,17 @@ class SearchActivity : BaseActivity() {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_search_screen, GlideBindingComponent())
 
+        mBinding.swipeRefresh.isEnabled = false
+
         viewModel.animateFab.observe(this, Observer {
             it?.let {
                 if (it) {
                     //animate transition
                     if (viewModel.searchCardVisible.get()) {
 
-                        if(mBinding.content.nameInput.tagInput.text.isBlank()){
+                        if (mBinding.content.nameInput.tagInput.text.isBlank()) {
                             mBinding.content.nameInput.tagInputLayout.error = resourcesManager.getString(R.string.empty_name)
-                        }else {
+                        } else {
                             viewModel.search(mBinding.content.nameInput.tagInput.text.toString())
                             sendToSearch()
 
@@ -60,19 +62,23 @@ class SearchActivity : BaseActivity() {
 
         viewModel.userInfo.observe(this, Observer {
             it?.let {
-                when(it.status){
+                when (it.status) {
 
-                    Status.SUCCESS -> {hideLoading()}
+                    Status.SUCCESS -> {
+                        hideLoading()
+                    }
                     Status.ERROR -> {
                         hideLoading()
-                        val message = if(it.message.isNullOrBlank()){
+                        val message = if (it.message.isNullOrBlank()) {
                             resourcesManager.getString(R.string.error_request)
-                        }else{
+                        } else {
                             it.message
                         }
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                     }
-                    Status.LOADING -> {showLoading()}
+                    Status.LOADING -> {
+                        showLoading()
+                    }
                 }
             }
         })
@@ -92,12 +98,13 @@ class SearchActivity : BaseActivity() {
         }
     }
 
-    private fun showLoading(){
-
+    private fun showLoading() {
+        mBinding.swipeRefresh.isRefreshing = true
+        deviceUtils.hideKeyboard(mBinding.root)
     }
 
-    private fun hideLoading(){
-
+    private fun hideLoading() {
+        mBinding.swipeRefresh.isRefreshing = false
     }
 
     private fun searchToSend() {
@@ -117,10 +124,10 @@ class SearchActivity : BaseActivity() {
         hideCardAnimated()
     }
 
-    private fun showCardAnimated(){
+    private fun showCardAnimated() {
         val x = mBinding.fab.right - (mBinding.fab.width / 2)
         revealCoordinates.cx = x - deviceUtils.dipToPixels(8f).toInt()
-        revealCoordinates.cy = (mBinding.content.nameInput.container.bottom - mBinding.content.nameInput.container.top)/2
+        revealCoordinates.cy = (mBinding.content.nameInput.container.bottom - mBinding.content.nameInput.container.top) / 2
         revealCoordinates.initialRadius = ((mBinding.fab.right - mBinding.fab.left) / 2).toFloat()
         revealCoordinates.endRadius = Math.max(deviceUtils.getScreenWidth(), deviceUtils.getScreenHeight()).toFloat()
         val anim = ViewAnimationUtils.createCircularReveal(mBinding.content.nameInput.root, revealCoordinates.cx, revealCoordinates.cy,
@@ -134,7 +141,7 @@ class SearchActivity : BaseActivity() {
 
     }
 
-    private fun hideCardAnimated(){
+    private fun hideCardAnimated() {
         val anim = ViewAnimationUtils.createCircularReveal(mBinding.content.nameInput.root, revealCoordinates.cx, revealCoordinates.cy,
                 revealCoordinates.endRadius, revealCoordinates.initialRadius)
 
