@@ -7,12 +7,16 @@ import com.rukiasoft.codewars.utils.DateUtils
 
 class SearchViewHolder (private val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(user: UserWithAllInfo) {
+    fun bind(user: UserWithAllInfo, callback: SearchAdapter.UserCallback) {
         binding.user = user.user
         user.languages?.let {
             if(it.isNotEmpty()) {
                 binding.bestLanguage = user.languages?.first()
             }
+        }
+
+        binding.root.setOnClickListener {
+            callback.onClick(user)
         }
 
         binding.dateFetched = DateUtils.getDateFormatted(user.user?.lastFetched)

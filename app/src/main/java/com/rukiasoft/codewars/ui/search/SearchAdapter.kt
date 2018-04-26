@@ -26,7 +26,7 @@ class SearchAdapter constructor(private val userCallback: UserCallback, private 
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val user: UserWithAllInfo = listOfUsers[position]
-        holder.bind(user)
+        holder.bind(user, userCallback)
     }
 
     interface UserCallback {

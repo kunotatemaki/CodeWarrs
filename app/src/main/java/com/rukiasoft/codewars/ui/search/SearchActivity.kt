@@ -135,7 +135,7 @@ class SearchActivity : BaseActivity() {
                 object : SearchAdapter.UserCallback {
                     override fun onClick(user: UserWithAllInfo?) {
                         user?.let {
-                            Timber.d("clicked")
+                            Timber.d("clicked %s", user.user?.userName)
                         }
                     }
                 },
