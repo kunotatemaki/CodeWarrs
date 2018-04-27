@@ -10,6 +10,7 @@ import com.rukiasoft.codewars.network.CodeWarsServiceFactory
 import com.rukiasoft.codewars.network.NetworkBoundResource
 import com.rukiasoft.codewars.persistence.PersistenceManager
 import com.rukiasoft.codewars.persistence.utils.PojoToEntities
+import com.rukiasoft.codewars.utils.DateUtils
 import com.rukiasoft.codewars.utils.RateLimiter
 import com.rukiasoft.codewars.vo.AbsentLiveData
 import com.rukiasoft.codewars.vo.Resource
@@ -45,6 +46,7 @@ constructor(private val codeWarsServiceFactory: CodeWarsServiceFactory,
                 //store the data in the db
                 val challengesToStore = PojoToEntities.getChallengeFromServerResponse(item, userName, true)
                 persistenceManager.insertChallenges(challengesToStore)
+                persistenceManager.storeInfoOfDownloadedAuthoredChallenges(DateUtils.currentTime, userName)
 
             }
 
@@ -78,6 +80,7 @@ fun getCompletedChallenges(userName: String, lastFetched: Date, page: Int, force
                 //store the data in the db
                 val challengesToStore = PojoToEntities.getChallengeFromServerResponse(item, userName, false)
                 persistenceManager.insertChallenges(challengesToStore)
+                persistenceManager.storeInfoOfDownloadedCompletedChallenges(item.totalPages, item.totalItems, DateUtils.currentTime, userName)
 
             }
 

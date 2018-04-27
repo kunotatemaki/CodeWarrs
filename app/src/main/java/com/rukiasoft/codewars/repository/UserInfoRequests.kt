@@ -11,6 +11,7 @@ import com.rukiasoft.codewars.network.NetworkBoundResource
 import com.rukiasoft.codewars.persistence.PersistenceManager
 import com.rukiasoft.codewars.persistence.entities.UserInfo
 import com.rukiasoft.codewars.persistence.utils.PojoToEntities
+import com.rukiasoft.codewars.utils.DateUtils
 import com.rukiasoft.codewars.utils.RateLimiter
 import com.rukiasoft.codewars.vo.AbsentLiveData
 import com.rukiasoft.codewars.vo.Resource

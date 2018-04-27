@@ -4,13 +4,14 @@ import com.rukiasoft.codewars.persistence.entities.*
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
 import com.rukiasoft.codewars.repository.ChallengeFromServer
 import com.rukiasoft.codewars.repository.UserInfoFromServer
-import java.util.*
+import com.rukiasoft.codewars.utils.DateUtils
+
 
 object PojoToEntities {
     fun getUserInfoFromServerResponse(server: UserInfoFromServer): UserWithAllInfo? {
         server.userName?.let { userName ->
             val userWithAllInfo = UserWithAllInfo()
-            userWithAllInfo.user = UserInfo(server, Date(System.currentTimeMillis()))
+            userWithAllInfo.user = UserInfo(server, DateUtils.currentTime)
 
             val skills = mutableListOf<Skill>()
             server.skills?.let {

@@ -7,6 +7,7 @@ import com.rukiasoft.codewars.persistence.db.CodeWarsDatabase
 import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
 import com.rukiasoft.codewars.persistence.utils.ChallengesToStore
+import java.util.*
 import javax.inject.Inject
 
 class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabase) : PersistenceManager {
@@ -76,6 +77,14 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
         db.challengeLanguageAuthoredDao().insert(challengesToStore.challengeLanguageAuthored)
         db.challengeLanguageCompletedDao().insert(challengesToStore.challengeLanguageCompleted)
         db.challengeTagDao().insert(challengesToStore.tags)
+    }
+
+    override fun storeInfoOfDownloadedAuthoredChallenges(authoredDate: Date, userName: String) {
+        db.userInfoDao().storeAuthoredInfo(authoredDate, userName)
+    }
+
+    override fun storeInfoOfDownloadedCompletedChallenges(pages: Int?, items: Int?, completedDate: Date, userName: String) {
+        db.userInfoDao().storeCompletedInfo(pages, items, completedDate, userName)
     }
 
     override fun deleteDb() {

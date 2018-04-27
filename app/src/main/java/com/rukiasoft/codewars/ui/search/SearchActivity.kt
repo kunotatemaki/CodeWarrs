@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.ViewAnimationUtils
 import android.widget.Toast
@@ -120,6 +121,8 @@ class SearchActivity : BaseActivity() {
             mBinding.fab.setImageDrawable(resourcesManager.getDrawable(R.drawable.ic_send_white_24dp))
         }
     }
+
+
 
 
     private fun populateList(users: List<UserWithAllInfo>){
