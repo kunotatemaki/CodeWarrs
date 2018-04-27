@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.rukiasoft.codewars.R
 import com.rukiasoft.codewars.databinding.ActivityChallengesBinding
@@ -153,6 +154,7 @@ class ChallengesActivity : BaseActivity() {
                         items?.let {
                             if (items > adapter.itemCount) {
                                 //need to download more items
+                                Timber.d("descargo: %d %d", items, adapter.itemCount)
                                 if(isRefreshing.not()) {
                                     viewModel.downloadNextPage()
                                 }
@@ -160,8 +162,13 @@ class ChallengesActivity : BaseActivity() {
                             }
                         }
                     }
-                    Toast.makeText(this@ChallengesActivity.applicationContext,
-                            resourcesManager.getString(R.string.no_more_items), Toast.LENGTH_SHORT).show()
+                    if(adapter.itemCount > 0) {
+                        mBinding.noMore.visibility = View.VISIBLE
+                    }
+                }else{
+                    if(mBinding.noMore.visibility == View.VISIBLE){
+                        mBinding.noMore.visibility = View.GONE
+                    }
                 }
 
             }

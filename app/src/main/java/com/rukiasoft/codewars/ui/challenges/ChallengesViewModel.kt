@@ -33,7 +33,8 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
 
     var type = ChallengeTypes.COMPLETED
 
-    private val query = MutableLiveData<Long>()
+    private val nItemsTrigger = MutableLiveData<Long>()
+    private val challengesTrigger = MutableLiveData<Long>()
 
     val numberOfChallenges: LiveData<Resource<Int>>
 
@@ -41,7 +42,7 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
 
     init {
 
-        numberOfChallenges = query.switchMap { _ ->
+        numberOfChallenges = nItemsTrigger.switchMap { _ ->
             if (user.value != null && user.value!!.userName.isNotBlank()) {
                 updateChallenges()
             } else {
@@ -49,7 +50,7 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
             }
         }
 
-        challenges = query.switchMap { _ ->
+        challenges = challengesTrigger.switchMap { _ ->
             if (user.value != null && user.value!!.userName.isNotBlank()) {
                 if (type == ChallengeTypes.AUTHORED) {
                     persistenceManager.getChallengesAuthored(user.value!!.userName)
@@ -60,6 +61,8 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
                 AbsentLiveData.create()
             }
         }
+
+
     }
 
     fun resetRefresh() {
@@ -70,8 +73,11 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
         nextPageToDownload = 0
         user.addSource(persistenceManager.getUserInfo(userName), {
             user.value = it
-            if (query.value == null) {
-                query.value = System.currentTimeMillis()
+            if (nItemsTrigger.value == null) {
+                nItemsTrigger.value = System.currentTimeMillis()
+            }
+            if(challengesTrigger.value == null) {
+                challengesTrigger.value = System.currentTimeMillis()
             }
         })
     }
@@ -89,17 +95,19 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
 
     fun setCompleted() {
         type = ChallengeTypes.COMPLETED
-        query.value = System.currentTimeMillis()
+        challengesTrigger.value = System.currentTimeMillis()
+        nItemsTrigger.value = System.currentTimeMillis()
     }
 
     fun setAuthored() {
         type = ChallengeTypes.AUTHORED
-        query.value = System.currentTimeMillis()
+        challengesTrigger.value = System.currentTimeMillis()
+        nItemsTrigger.value = System.currentTimeMillis()
     }
 
     fun refreshData() {
         refresh = true
-        query.value = System.currentTimeMillis()
+        nItemsTrigger.value = System.currentTimeMillis()
     }
 
     fun isCompleted() = type == ChallengeTypes.COMPLETED
@@ -112,7 +120,7 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
             if (nextPageToDownload <= it) {
                 Timber.d("descargo %d ", nextPageToDownload)
                 refresh = true
-                query.value = System.currentTimeMillis()
+                nItemsTrigger.value = System.currentTimeMillis()
             }
         }
     }

@@ -5,7 +5,6 @@
 
     <data class="ItemChallengeBinding">
 
-
         <variable
             name="challenge"
             type="com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo" />
@@ -43,13 +42,15 @@
         <TextView
             android:id="@+id/description"
             style="@style/Body"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             isVisibleOrGone="@{challenge.getDescription() != null}"
             android:text="@{challenge.getDescription()}"
             tools:text="description"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name" />
         <TextView
             android:id="@+id/language_authored_label"
@@ -67,13 +68,16 @@
             android:id="@+id/language_authored"
             style="@style/Body"
             isVisibleOrGone="@{challenge.hasLanguagesAuthored()}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{challenge.getLanguagesAuthored()}"
             android:layout_marginStart="8dp"
-            app:layout_constraintBaseline_toBaselineOf="@id/language_authored_label"
+            app:layout_constraintTop_toTopOf="@id/language_authored_label"
+            app:layout_constraintBottom_toBottomOf="@id/language_authored_label"
             app:layout_constraintLeft_toRightOf="@id/language_authored_label"
             app:layout_constraintStart_toEndOf="@id/language_authored_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             tools:text="kotlin..." />
 
         <TextView
@@ -81,39 +85,44 @@
             style="@style/Body"
             android:textStyle="bold"
             isVisibleOrGone="@{challenge.hasLanguagesCompleted()}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:text="@string/languages"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/language_authored_label"/>
+            app:layout_constraintTop_toBottomOf="@id/language_authored"/>
 
         <TextView
             android:id="@+id/language_completed"
             style="@style/Body"
             isVisibleOrGone="@{challenge.hasLanguagesCompleted()}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{challenge.getLanguagesCompleted()}"
             android:layout_marginStart="8dp"
-            app:layout_constraintBaseline_toBaselineOf="@id/language_completed_label"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/language_completed_label"
+            app:layout_constraintBottom_toBottomOf="@id/language_completed_label"
             app:layout_constraintLeft_toRightOf="@id/language_completed_label"
             app:layout_constraintStart_toEndOf="@id/language_completed_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             tools:text="kotlin..." />
 
         <TextView
             android:id="@+id/tags"
             style="@style/Secondary"
             isVisibleOrGone="@{challenge.hasTags()}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{challenge.getTagsInString()}"
             tools:text="tag"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/language_completed_label" />
-
-
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/language_completed" />
 
         <TextView
             android:id="@+id/date"

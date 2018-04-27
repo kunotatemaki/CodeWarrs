@@ -10,17 +10,23 @@ import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
 import com.rukiasoft.codewars.utils.getDistinct
 
 @Dao
-abstract class ChallengeDao: BaseDao<Challenge>{
+abstract class ChallengeDao : BaseDao<Challenge> {
 
     fun getListChallengeAuthored(userName: String): DataSource.Factory<Int, ChallengeWithAllInfo> =
-            getListChallengeInternal(userName, true)
+            getListChallengeAuthoredInternal(userName)
+
+    @Query("SELECT * FROM challenge WHERE user_name LIKE :userName AND authored = 1")
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    protected abstract fun getListChallengeAuthoredInternal(userName: String): DataSource.Factory<Int, ChallengeWithAllInfo>
+
 
     fun getListChallengeCompleted(userName: String): DataSource.Factory<Int, ChallengeWithAllInfo> =
-            getListChallengeInternal(userName, false)
+            getListChallengeCompletedInternal(userName)
 
-    @Query("SELECT * FROM challenge WHERE user_name LIKE :userName AND authored = :authored")
+
+    @Query("SELECT * FROM challenge WHERE user_name LIKE :userName AND authored = 0 ORDER BY completed_at DESC")
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    protected abstract fun getListChallengeInternal(userName: String, authored: Boolean): DataSource.Factory<Int, ChallengeWithAllInfo>
+    protected abstract fun getListChallengeCompletedInternal(userName: String): DataSource.Factory<Int, ChallengeWithAllInfo>
 
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -32,7 +38,6 @@ abstract class ChallengeDao: BaseDao<Challenge>{
 
     @Query("DELETE FROM challenge_tag")
     abstract fun deleteAll()
-
 
 
 }

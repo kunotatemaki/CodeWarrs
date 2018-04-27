@@ -51,7 +51,7 @@ class ChallengeWithAllInfo {
     }
 
     fun hasLanguagesAuthored(): Boolean {
-        return !(challengeLanguageAuthored == null || challengeLanguageAuthored!!.isEmpty())
+        return !(challengeLanguageAuthored == null || challengeLanguageAuthored!!.isEmpty()) && challenge!!.authored!!
     }
 
     fun getLanguagesCompleted(): String {
@@ -66,7 +66,7 @@ class ChallengeWithAllInfo {
     }
 
     fun hasLanguagesCompleted(): Boolean {
-        return !(challengeLanguageCompleted == null || challengeLanguageCompleted!!.isEmpty())
+        return !(challengeLanguageCompleted == null || challengeLanguageCompleted!!.isEmpty()) && !challenge!!.authored!!
     }
 
     @Suppress("DEPRECATION")
