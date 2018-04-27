@@ -1,6 +1,11 @@
 package com.rukiasoft.codewars.persistence
 
+import android.arch.lifecycle.LiveData
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
+import android.graphics.pdf.PdfDocument
 import com.rukiasoft.codewars.persistence.db.CodeWarsDatabase
+import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
 import javax.inject.Inject
 
@@ -34,6 +39,17 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
     override fun getListUsersByRank() = db.userInfoDao().getListUsersByRank()
 
     override fun getUserInfo(userName: String) = db.userInfoDao().getUsers(userName)
+
+    override fun getChallengesCompleted(userName: String): LiveData<PagedList<ChallengeWithAllInfo>> {
+        return LivePagedListBuilder(db.challengeDao().getListChallengeCompleted(userName), PAGE_SIZE)
+                .build()
+    }
+
+    override fun getChallengesAuthored(userName: String): LiveData<PagedList<ChallengeWithAllInfo>> {
+        return LivePagedListBuilder(db.challengeDao().getListChallengeAuthored(userName), PAGE_SIZE)
+                .build()
+    }
+
 
     override fun deleteDb() {
 

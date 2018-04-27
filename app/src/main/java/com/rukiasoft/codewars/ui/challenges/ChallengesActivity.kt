@@ -9,6 +9,7 @@ import com.rukiasoft.codewars.R
 import com.rukiasoft.codewars.databinding.ActivityChallengesBinding
 import com.rukiasoft.codewars.databinding.GlideBindingComponent
 import com.rukiasoft.codewars.ui.common.BaseActivity
+import com.rukiasoft.codewars.utils.Constants
 import kotlinx.android.synthetic.main.activity_challenges.*
 
 class ChallengesActivity : BaseActivity() {
@@ -38,5 +39,13 @@ class ChallengesActivity : BaseActivity() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_challenges, GlideBindingComponent())
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        if(intent.hasExtra(Constants.USER_NAME).not()){
+            finish()
+        }
+
+        viewModel.setUserName(intent.getStringExtra(Constants.USER_NAME))
+
+
     }
 }

@@ -17,4 +17,14 @@ class ChallengeWithAllInfo {
     @Relation(parentColumn = "id", entityColumn = "challenge_id")
     var tags: MutableList<ChallengeTag>? = null
 
+    fun getDate() = "date"
+
+    fun getTagsInString() = "tags"
+    fun hasTags() = true
+
+    fun isCompleted() = true
+
+    fun getLanguages() = "languages"
+    fun hasLanguages() = true
+
 }

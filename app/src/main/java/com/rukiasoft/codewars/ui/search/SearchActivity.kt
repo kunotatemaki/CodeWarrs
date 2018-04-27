@@ -25,6 +25,7 @@ import com.rukiasoft.codewars.model.RevealCoordinates
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
 import com.rukiasoft.codewars.ui.challenges.ChallengesActivity
 import com.rukiasoft.codewars.ui.common.BaseActivity
+import com.rukiasoft.codewars.utils.Constants
 import com.rukiasoft.codewars.utils.DeviceUtils
 import com.rukiasoft.codewars.vo.Status
 import timber.log.Timber
@@ -136,8 +137,9 @@ class SearchActivity : BaseActivity() {
         val adapter = SearchAdapter(
                 object : SearchAdapter.UserCallback {
                     override fun onClick(user: UserWithAllInfo?) {
-                        user?.let {
+                        user?.let {user ->
                             val intent = Intent(this@SearchActivity, ChallengesActivity::class.java)
+                            intent.putExtra(Constants.USER_NAME, user.user?.userName)
                             startActivity(intent)
                         }
                     }
