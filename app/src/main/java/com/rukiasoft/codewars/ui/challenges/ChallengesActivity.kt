@@ -2,13 +2,18 @@ package com.rukiasoft.codewars.ui.challenges
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.arch.paging.PagedList
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.rukiasoft.codewars.R
 import com.rukiasoft.codewars.databinding.ActivityChallengesBinding
 import com.rukiasoft.codewars.databinding.GlideBindingComponent
+import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
 import com.rukiasoft.codewars.ui.common.BaseActivity
 import com.rukiasoft.codewars.utils.Constants
 import kotlinx.android.synthetic.main.activity_challenges.*
@@ -45,14 +50,54 @@ class ChallengesActivity : BaseActivity() {
         if(intent.hasExtra(Constants.USER_NAME).not()){
             finish()
         }
+        
+        setUpRecycler()
 
         viewModel.setUserName(intent.getStringExtra(Constants.USER_NAME))
 
         viewModel.challenges.observe(this, Observer {
             it?.let {
-                Timber.d("")
+                //do nothing, just observe to trigger the events
             }
         })
+
+        viewModel.authoredChallenges.observe(this, Observer {
+            it?.let {
+                if(it.isNotEmpty() && viewModel.isAuthored()){
+                    (mRecyclerView.adapter as ChallengeAuthoredAdapter).submitList(it)
+                }
+            }
+        })
+
+    }
+
+    private fun setUpRecycler(){
+
+        //get the recycler
+        mRecyclerView = mBinding.listChallenges
+
+        // use a linear
+        // layout manager
+        val mLayoutManager = LinearLayoutManager(this.applicationContext, LinearLayoutManager.VERTICAL, false)
+        mRecyclerView.layoutManager = mLayoutManager
+
+        //add a divider decorator
+        val dividerItemDecoration = DividerItemDecoration(mRecyclerView.context,
+                DividerItemDecoration.VERTICAL)
+        mRecyclerView.addItemDecoration(dividerItemDecoration)
+
+
+        //add the adapter
+        val adapter = ChallengeAuthoredAdapter(object : ChallengeAuthoredAdapter.ChallengeClickCallback {
+            override fun onClick(challenge: ChallengeWithAllInfo?) {
+                challenge?.let {
+                    Timber.d("")
+                }
+            }
+        })
+
+        mRecyclerView.adapter = adapter
+
 
     }
 }

@@ -15,7 +15,10 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:clipToPadding="false"
         android:clickable="true"
         android:focusable="true"
@@ -42,15 +45,16 @@
             style="@style/Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{challenge.challenge.description}"
+            android:text="@{challenge.getDescription()}"
             tools:text="description"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name" />
         <TextView
-            android:id="@+id/language_label"
+            android:id="@+id/language_authored_label"
             style="@style/Body"
-            isVisibleOrGone="@{challenge.hasLanguages()}"
+            android:textStyle="bold"
+            isVisibleOrGone="@{challenge.hasLanguagesAuthored()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/languages"
@@ -59,16 +63,41 @@
             app:layout_constraintTop_toBottomOf="@id/description"/>
 
         <TextView
-            android:id="@+id/language"
-            style="@style/Secondary"
-            isVisibleOrGone="@{challenge.hasLanguages()}"
+            android:id="@+id/language_authored"
+            style="@style/Body"
+            isVisibleOrGone="@{challenge.hasLanguagesAuthored()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{challenge.getLanguages()}"
+            android:text="@{challenge.getLanguagesAuthored()}"
             android:layout_marginStart="8dp"
-            app:layout_constraintBaseline_toBaselineOf="@id/language_label"
-            app:layout_constraintLeft_toRightOf="@id/language_label"
-            app:layout_constraintStart_toEndOf="@id/language_label"
+            app:layout_constraintBaseline_toBaselineOf="@id/language_authored_label"
+            app:layout_constraintLeft_toRightOf="@id/language_authored_label"
+            app:layout_constraintStart_toEndOf="@id/language_authored_label"
+            tools:text="kotlin..." />
+
+        <TextView
+            android:id="@+id/language_completed_label"
+            style="@style/Body"
+            android:textStyle="bold"
+            isVisibleOrGone="@{challenge.hasLanguagesCompleted()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/languages"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/language_authored_label"/>
+
+        <TextView
+            android:id="@+id/language_completed"
+            style="@style/Body"
+            isVisibleOrGone="@{challenge.hasLanguagesCompleted()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{challenge.getLanguagesCompleted()}"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBaseline_toBaselineOf="@id/language_completed_label"
+            app:layout_constraintLeft_toRightOf="@id/language_completed_label"
+            app:layout_constraintStart_toEndOf="@id/language_completed_label"
             tools:text="kotlin..." />
 
         <TextView
@@ -81,7 +110,7 @@
             tools:text="tag"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/language_label" />
+            app:layout_constraintTop_toBottomOf="@id/language_completed_label" />
 
 
 

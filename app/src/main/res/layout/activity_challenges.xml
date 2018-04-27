@@ -19,13 +19,12 @@
             android:id="@+id/list_challenges"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#f00"
             tools:listitem="@layout/item_challenge"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/navigation"
             app:layout_constraintTop_toTopOf="parent"
             />
 
