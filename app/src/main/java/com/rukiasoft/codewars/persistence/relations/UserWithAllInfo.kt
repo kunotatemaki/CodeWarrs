@@ -24,7 +24,7 @@ class UserWithAllInfo {
     @Ignore
     var bestLanguage: Language? = null
 
-    fun getDate() = DateUtils.getDateFormatted(user?.lastFetched)
+    fun getDate() = DateUtils.getDateFormatted(user?.lastFetchedInfo)
 
     fun getBestLanguageName(): String?{
         if(bestLanguage == null){
@@ -42,11 +42,12 @@ class UserWithAllInfo {
 
 
     private fun calculateBestLanguage() {
-        if (languages == null || languages!!.isEmpty()) {
-            bestLanguage =  null
+        bestLanguage = if (languages == null || languages!!.isEmpty()) {
+            null
+        }else {
+            val ordered = languages!!.sortedWith(CompareLanguagesDescending)
+            ordered.first()
         }
-        val ordered = languages!!.sortedWith(CompareLanguagesDescending)
-        bestLanguage = ordered.first()
     }
 
 

@@ -9,7 +9,7 @@ import com.rukiasoft.codewars.utils.getDistinct
 
 @Dao
 abstract class UserInfoDao: BaseDao<UserInfo>{
-    @Query("SELECT * FROM user_info ORDER BY last_fetched DESC LIMIT 5")
+    @Query("SELECT * FROM user_info ORDER BY last_fetched_info DESC LIMIT 5")
     protected abstract fun getListUsersByDateInternal(): LiveData<List<UserWithAllInfo>>
 
     fun getListUsersByDate(): LiveData<List<UserWithAllInfo>> =
@@ -24,8 +24,11 @@ abstract class UserInfoDao: BaseDao<UserInfo>{
     @Query("SELECT * FROM user_info WHERE user_name LIKE :userName")
     protected abstract fun getUserInternal(userName: String): LiveData<UserInfo>
 
-    fun getUsers(userName: String): LiveData<UserInfo> =
+    fun getUser(userName: String): LiveData<UserInfo> =
             getUserInternal(userName).getDistinct()
+
+    @Query("SELECT * FROM user_info WHERE user_name LIKE :userName")
+    abstract fun getUserWithoutLiveData(userName: String): UserInfo?
 
     @Query("DELETE FROM user_info")
     abstract fun deleteAll()

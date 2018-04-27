@@ -9,12 +9,11 @@ import com.rukiasoft.codewars.network.ApiResponse
 import com.rukiasoft.codewars.network.CodeWarsServiceFactory
 import com.rukiasoft.codewars.network.NetworkBoundResource
 import com.rukiasoft.codewars.persistence.PersistenceManager
-import com.rukiasoft.codewars.persistence.entities.UserInfo
 import com.rukiasoft.codewars.persistence.utils.PojoToEntities
 import com.rukiasoft.codewars.utils.RateLimiter
 import com.rukiasoft.codewars.vo.AbsentLiveData
 import com.rukiasoft.codewars.vo.Resource
-import timber.log.Timber
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,32 +36,30 @@ constructor(private val codeWarsServiceFactory: CodeWarsServiceFactory,
     //request info from user if the last request is more than 15 minutes old
     private val rateLimit: RateLimiter = RateLimiter(15, TimeUnit.MINUTES)
 
-    fun getAuthoredChallenges(userName: String, retries: Int): LiveData<Resource<UserInfo>> {
+    fun getAuthoredChallenges(userName: String, lastFetched: Date, forceDownload:Boolean, retries: Int): LiveData<Resource<Int>> {
         val host: String = NetworkConstants.API_BASE_URL
 
-        return object : NetworkBoundResource<UserInfo, UserInfoFromServer>(appExecutors) {
-            override fun saveCallResult(item: UserInfoFromServer) {
+        return object : NetworkBoundResource<Int, ChallengeFromServer>(appExecutors) {
+            override fun saveCallResult(item: ChallengeFromServer) {
 
                 //store the data in the db
-                val user = PojoToEntities.getUserInfoFromServerResponse(item)
-                user?.let {
-                    persistenceManager.insertUserInfo(user)
-                }
+                val challengesToStore = PojoToEntities.getChallengeFromServerResponse(item, userName, true)
+                persistenceManager.insertChallenges(challengesToStore)
 
             }
 
-            override fun shouldFetch(data: UserInfo?): Boolean {
-                return data == null || rateLimit.shouldFetch(data.lastFetched.time)
+            override fun shouldFetch(data: Int?): Boolean {
+                return data == null || data == 0 || forceDownload || rateLimit.shouldFetch(lastFetched.time)
             }
 
-            override fun loadFromDb(): LiveData<UserInfo> {
-                return persistenceManager.getUserInfo(userName)
+            override fun loadFromDb(): LiveData<Int> {
+                return persistenceManager.getNumberChallengesAuthored(userName)
             }
 
-            override fun createCall(): LiveData<ApiResponse<UserInfoFromServer>> {
+            override fun createCall(): LiveData<ApiResponse<ChallengeFromServer>> {
                 //create call
                 val networkService: CodeWarsService? = codeWarsServiceFactory.getCodeWarsService(host, retries)
-                return networkService?.getUserInfo(userName)
+                return networkService?.getAuthoredChallenges(userName)
                         ?: AbsentLiveData.create()
             }
 

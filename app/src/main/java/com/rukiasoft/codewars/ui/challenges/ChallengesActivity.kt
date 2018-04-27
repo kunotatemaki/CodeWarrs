@@ -1,5 +1,6 @@
 package com.rukiasoft.codewars.ui.challenges
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -11,6 +12,7 @@ import com.rukiasoft.codewars.databinding.GlideBindingComponent
 import com.rukiasoft.codewars.ui.common.BaseActivity
 import com.rukiasoft.codewars.utils.Constants
 import kotlinx.android.synthetic.main.activity_challenges.*
+import timber.log.Timber
 
 class ChallengesActivity : BaseActivity() {
 
@@ -21,11 +23,11 @@ class ChallengesActivity : BaseActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_completed -> {
-                message.setText(R.string.title_home)
+                //message.setText(R.string.title_home)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_authored -> {
-                message.setText(R.string.title_dashboard)
+                //message.setText(R.string.title_dashboard)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -46,6 +48,11 @@ class ChallengesActivity : BaseActivity() {
 
         viewModel.setUserName(intent.getStringExtra(Constants.USER_NAME))
 
+        viewModel.challenges.observe(this, Observer {
+            it?.let {
+                Timber.d("")
+            }
+        })
 
     }
 }

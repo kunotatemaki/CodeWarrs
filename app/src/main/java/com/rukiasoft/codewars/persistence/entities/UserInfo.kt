@@ -12,16 +12,16 @@ import java.util.*
  * Entity for User Info
  */
 
-@Entity(tableName = "user_info", indices = [(Index(value = arrayOf("last_fetched", "overall_score")))])
+@Entity(tableName = "user_info", indices = [(Index(value = arrayOf("last_fetched_info", "overall_score")))])
 class UserInfo constructor(@PrimaryKey
                            @ColumnInfo(name = "user_name")
-                           val userName: String,
+                           var userName: String,
                            @ColumnInfo(name = "name")
-                           val name: String?,
+                           var name: String?,
                            @ColumnInfo(name = "honor")
-                           val honor: Int?,
+                           var honor: Int?,
                            @ColumnInfo(name = "clan")
-                           val clan: String?,
+                           var clan: String?,
                            @ColumnInfo(name = "leader_board_position")
                            var leaderBoardPosition: Int?,
                            @ColumnInfo(name = "overall_rank")
@@ -32,14 +32,37 @@ class UserInfo constructor(@PrimaryKey
                            var overallColor: String?,
                            @ColumnInfo(name = "overall_score")
                            var overallScore: Int?,
-                           @ColumnInfo(name = "last_fetched")
-                           var lastFetched: Date
+                           @ColumnInfo(name = "last_fetched_info")
+                           var lastFetchedInfo: Date,
+                           @ColumnInfo(name = "last_fetched_authored")
+                           var lastFetchedAuthored: Date?,
+                           @ColumnInfo(name = "last_fetched_completed")
+                           var lastFetchedCompleted: Date?,
+                           @ColumnInfo(name = "n_page_completed")
+                           var nPageCompleted: Int?,
+                           @ColumnInfo(name = "n_items_completed")
+                           var nItemsCompleted: Int?
+
 ) {
 
     constructor(user: UserInfoFromServer, date: Date) : this(
             user.userName!!, user.name, user.honor, user.clan, user.leaderBoardPosition,
             user.ranks?.overall?.rank, user.ranks?.overall?.name, user.ranks?.overall?.color,
-            user.ranks?.overall?.score, date)
+            user.ranks?.overall?.score, date, null, null,
+            null, null)
+
+    fun updateUserInfo(user: UserInfo) {
+        userName = user.userName
+        name = user.name
+        honor = user.honor
+        clan = user.clan
+        leaderBoardPosition = user.leaderBoardPosition
+        overallRank = user.overallRank
+        overallName = user.overallName
+        overallColor = user.overallColor
+        overallScore = user.overallScore
+        lastFetchedInfo = user.lastFetchedInfo
+    }
 
     fun compareTo(user: UserInfo): Boolean {
         return (userName == user.userName)
@@ -47,10 +70,14 @@ class UserInfo constructor(@PrimaryKey
                 .and(name == user.name)
                 .and(clan == user.clan)
                 .and(leaderBoardPosition == user.leaderBoardPosition)
-                .and(lastFetched == user.lastFetched)
+                .and(lastFetchedInfo == user.lastFetchedInfo)
                 .and(overallRank == user.overallRank)
                 .and(overallName == user.overallName)
                 .and(overallColor == user.overallColor)
+                .and(lastFetchedAuthored == user.lastFetchedAuthored)
+                .and(lastFetchedCompleted == user.lastFetchedCompleted)
+                .and(nItemsCompleted == user.nItemsCompleted)
+                .and(nPageCompleted == user.nPageCompleted)
                 .and(overallScore == user.overallScore)
     }
 

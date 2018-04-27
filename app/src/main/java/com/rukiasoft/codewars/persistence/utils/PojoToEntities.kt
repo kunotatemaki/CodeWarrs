@@ -1,15 +1,14 @@
 package com.rukiasoft.codewars.persistence.utils
 
-import com.rukiasoft.codewars.persistence.entities.Language
-import com.rukiasoft.codewars.persistence.entities.Skill
-import com.rukiasoft.codewars.persistence.entities.UserInfo
+import com.rukiasoft.codewars.persistence.entities.*
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
+import com.rukiasoft.codewars.repository.ChallengeFromServer
 import com.rukiasoft.codewars.repository.UserInfoFromServer
 import java.util.*
 
-object PojoToEntities{
-    fun getUserInfoFromServerResponse(server: UserInfoFromServer): UserWithAllInfo?{
-        server.userName?.let {userName ->
+object PojoToEntities {
+    fun getUserInfoFromServerResponse(server: UserInfoFromServer): UserWithAllInfo? {
+        server.userName?.let { userName ->
             val userWithAllInfo = UserWithAllInfo()
             userWithAllInfo.user = UserInfo(server, Date(System.currentTimeMillis()))
 
@@ -34,5 +33,29 @@ object PojoToEntities{
             return userWithAllInfo
         }
         return null
+    }
+
+    fun getChallengeFromServerResponse(server: ChallengeFromServer, userName: String, authored: Boolean): ChallengesToStore {
+        val challengesToStore = ChallengesToStore()
+        server.data?.let { challenges ->
+            challenges.forEach({
+
+                val challenge = Challenge(it, userName, authored)
+                challengesToStore.challenge.add(challenge)
+
+                it.languages?.let {
+                    challengesToStore.challengeLanguageAuthored.addAll(it.map { ChallengeLanguageAuthored(null, it, challenge.id) })
+
+                }
+                it.completedLanguages?.let {
+                    challengesToStore.challengeLanguageCompleted.addAll(it.map { ChallengeLanguageCompleted(null, it, challenge.id) })
+                }
+                it.tags?.let {
+                    challengesToStore.tags.addAll(it.map { ChallengeTag(null, it, challenge.id) })
+                }
+
+            })
+        }
+        return challengesToStore
     }
 }

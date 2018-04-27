@@ -52,7 +52,7 @@ constructor(private val codeWarsServiceFactory: CodeWarsServiceFactory,
             }
 
             override fun shouldFetch(data: UserInfo?): Boolean {
-                return data == null || rateLimit.shouldFetch(data.lastFetched.time)
+                return data == null || rateLimit.shouldFetch(data.lastFetchedInfo.time)
             }
 
             override fun loadFromDb(): LiveData<UserInfo> {

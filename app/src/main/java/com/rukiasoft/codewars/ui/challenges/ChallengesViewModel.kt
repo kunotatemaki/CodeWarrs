@@ -3,14 +3,15 @@ package com.rukiasoft.codewars.ui.challenges
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.arch.paging.PagedList
 import com.rukiasoft.codewars.persistence.PersistenceManager
-import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
-import com.rukiasoft.codewars.repository.UserInfoRequests
+import com.rukiasoft.codewars.repository.ChallengeRequests
+import com.rukiasoft.codewars.utils.Constants
 import com.rukiasoft.codewars.utils.switchMap
+import com.rukiasoft.codewars.vo.Resource
+import java.util.*
 import javax.inject.Inject
 
-class ChallengesViewModel @Inject constructor(private val userInfoRequests: UserInfoRequests,
+class ChallengesViewModel @Inject constructor(private val challengeRequests: ChallengeRequests,
                                               private val persistenceManager: PersistenceManager) : ViewModel() {
 
     enum class ChallengeTypes{
@@ -24,12 +25,12 @@ class ChallengesViewModel @Inject constructor(private val userInfoRequests: User
 
     private val query = MutableLiveData<Long>()
 
-    val challenges: LiveData<PagedList<ChallengeWithAllInfo>>
+    val challenges: LiveData<Resource<Int>>
 
     init {
 
         challenges = query.switchMap { _ ->
-            getListOfChallenges()
+            getNumberOfChallenges()
         }
     }
 
@@ -38,10 +39,10 @@ class ChallengesViewModel @Inject constructor(private val userInfoRequests: User
         query.value = System.currentTimeMillis()
     }
 
-    private fun getListOfChallenges(): LiveData<PagedList<ChallengeWithAllInfo>> {
+    private fun getNumberOfChallenges(): LiveData<Resource<Int>> {
         return when(type) {
-            ChallengesViewModel.ChallengeTypes.COMPLETED -> persistenceManager.getChallengesCompleted(userName)
-            ChallengesViewModel.ChallengeTypes.AUTHORED -> persistenceManager.getChallengesAuthored(userName)
+            ChallengesViewModel.ChallengeTypes.COMPLETED ->  challengeRequests.getAuthoredChallenges(userName, Date(0), true, Constants.DEFAULT_NUMBER_OF_RETRIES)
+            ChallengesViewModel.ChallengeTypes.AUTHORED -> challengeRequests.getAuthoredChallenges(userName, Date(0), true, Constants.DEFAULT_NUMBER_OF_RETRIES)
         }
     }
 

@@ -3,10 +3,10 @@ package com.rukiasoft.codewars.persistence
 import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import android.graphics.pdf.PdfDocument
 import com.rukiasoft.codewars.persistence.db.CodeWarsDatabase
 import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
+import com.rukiasoft.codewars.persistence.utils.ChallengesToStore
 import javax.inject.Inject
 
 class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabase) : PersistenceManager {
@@ -27,10 +27,21 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
 
 
     override fun insertUserInfo(user: UserWithAllInfo) {
-        user.user?.let { db.userInfoDao().insert(it) }
+
         user.skils?.let { db.skillDao().insert(it) }
         user.languages?.let { db.languageDao().insert(it) }
 
+        user.user?.let {
+            //check if the user exists
+            val item = getUserInfoWithoutLiveData(it.userName)
+            if (item != null) {
+                //exist -> update it
+                item.updateUserInfo(it)
+                db.userInfoDao().insert(item)
+            } else {
+                db.userInfoDao().insert(it)
+            }
+        }
 
     }
 
@@ -38,7 +49,9 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
 
     override fun getListUsersByRank() = db.userInfoDao().getListUsersByRank()
 
-    override fun getUserInfo(userName: String) = db.userInfoDao().getUsers(userName)
+    override fun getUserInfo(userName: String) = db.userInfoDao().getUser(userName)
+
+    override fun getUserInfoWithoutLiveData(userName: String) = db.userInfoDao().getUserWithoutLiveData(userName)
 
     override fun getChallengesCompleted(userName: String): LiveData<PagedList<ChallengeWithAllInfo>> {
         return LivePagedListBuilder(db.challengeDao().getListChallengeCompleted(userName), PAGE_SIZE)
@@ -50,6 +63,16 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
                 .build()
     }
 
+    override fun getNumberChallengesAuthored(userName: String): LiveData<Int> {
+        return db.challengeDao().getNumberOfChallenges(userName, true)
+    }
+
+    override fun insertChallenges(challengesToStore: ChallengesToStore) {
+        db.challengeDao().insert(challengesToStore.challenge)
+        db.challengeLanguageAuthoredDao().insert(challengesToStore.challengeLanguageAuthored)
+        db.challengeLanguageCompletedDao().insert(challengesToStore.challengeLanguageCompleted)
+        db.challengeTagDao().insert(challengesToStore.tags)
+    }
 
     override fun deleteDb() {
 
