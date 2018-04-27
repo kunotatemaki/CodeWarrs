@@ -37,6 +37,10 @@ object PojoToEntities {
 
     fun getChallengeFromServerResponse(server: ChallengeFromServer, userName: String, authored: Boolean): ChallengesToStore {
         val challengesToStore = ChallengesToStore()
+
+        server.totalItems?.let { challengesToStore.items = it }
+        server.totalPages?.let { challengesToStore.pages = it }
+
         server.data?.let { challenges ->
             challenges.forEach({
 

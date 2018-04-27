@@ -28,11 +28,11 @@ class ChallengesActivity : BaseActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_completed -> {
-                //message.setText(R.string.title_home)
+                viewModel.setCompleted()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_authored -> {
-                //message.setText(R.string.title_dashboard)
+                viewModel.setAuthored()
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -55,17 +55,16 @@ class ChallengesActivity : BaseActivity() {
 
         viewModel.setUserName(intent.getStringExtra(Constants.USER_NAME))
 
-        viewModel.challenges.observe(this, Observer {
+        viewModel.numberOfChallenges.observe(this, Observer {
             it?.let {
                 //do nothing, just observe to trigger the events
             }
         })
 
-        viewModel.authoredChallenges.observe(this, Observer {
+        viewModel.challenges.observe(this, Observer {
             it?.let {
-                if(it.isNotEmpty() && viewModel.isAuthored()){
-                    (mRecyclerView.adapter as ChallengeAuthoredAdapter).submitList(it)
-                }
+                (mRecyclerView.adapter as ChallengeAuthoredAdapter).submitList(it)
+
             }
         })
 

@@ -28,7 +28,7 @@
         <TextView
             android:id="@+id/name"
             style="@style/Body"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{challenge.challenge.name}"
             android:textStyle="bold"
@@ -45,6 +45,7 @@
             style="@style/Body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            isVisibleOrGone="@{challenge.getDescription() != null}"
             android:text="@{challenge.getDescription()}"
             tools:text="description"
             app:layout_constraintLeft_toLeftOf="parent"

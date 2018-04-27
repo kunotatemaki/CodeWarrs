@@ -69,5 +69,38 @@ constructor(private val codeWarsServiceFactory: CodeWarsServiceFactory,
         }.asLiveData()
     }
 
+fun getCompletedChallenges(userName: String, lastFetched: Date, page: Int, forceDownload:Boolean, retries: Int): LiveData<Resource<Int>> {
+        val host: String = NetworkConstants.API_BASE_URL
+
+        return object : NetworkBoundResource<Int, ChallengeFromServer>(appExecutors) {
+            override fun saveCallResult(item: ChallengeFromServer) {
+
+                //store the data in the db
+                val challengesToStore = PojoToEntities.getChallengeFromServerResponse(item, userName, false)
+                persistenceManager.insertChallenges(challengesToStore)
+
+            }
+
+            override fun shouldFetch(data: Int?): Boolean {
+                return data == null || data == 0 || forceDownload || rateLimit.shouldFetch(lastFetched.time)
+            }
+
+            override fun loadFromDb(): LiveData<Int> {
+                return persistenceManager.getNumberChallengesCompleted(userName)
+            }
+
+            override fun createCall(): LiveData<ApiResponse<ChallengeFromServer>> {
+                //create call
+                val networkService: CodeWarsService? = codeWarsServiceFactory.getCodeWarsService(host, retries)
+                return networkService?.getCompletedChallenges(userName, page)
+                        ?: AbsentLiveData.create()
+            }
+
+            override fun onFetchFailed() {
+                //something went wrong
+            }
+        }.asLiveData()
+    }
+
 
 }

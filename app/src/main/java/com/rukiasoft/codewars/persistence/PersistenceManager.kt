@@ -20,6 +20,7 @@ interface PersistenceManager {
     fun getChallengesAuthored(userName: String): LiveData<PagedList<ChallengeWithAllInfo>>
     fun getNumberChallengesAuthored(userName: String): LiveData<Int>
     fun insertChallenges(challengesToStore: ChallengesToStore)
+    fun getNumberChallengesCompleted(userName: String): LiveData<Int>
 
     fun deleteDb()
 

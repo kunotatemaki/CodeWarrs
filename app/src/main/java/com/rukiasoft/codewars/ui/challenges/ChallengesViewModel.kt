@@ -26,17 +26,17 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
 
     private var userName: String = ""
 
-    var type = ChallengeTypes.AUTHORED
+    var type = ChallengeTypes.COMPLETED
 
     private val query = MutableLiveData<Long>()
 
-    val challenges: LiveData<Resource<Int>>
+    val numberOfChallenges: LiveData<Resource<Int>>
 
-    val authoredChallenges: LiveData<PagedList<ChallengeWithAllInfo>>
+    val challenges: LiveData<PagedList<ChallengeWithAllInfo>>
 
     init {
 
-        challenges = query.switchMap { _ ->
+        numberOfChallenges = query.switchMap { _ ->
             if(userName.isNotBlank()) {
                 updateChallenges()
             }else{
@@ -44,9 +44,13 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
             }
         }
 
-        authoredChallenges = query.switchMap { _ ->
+        challenges = query.switchMap { _ ->
             if(userName.isNotBlank()) {
-                persistenceManager.getChallengesAuthored(userName)
+                if(type == ChallengeTypes.AUTHORED) {
+                    persistenceManager.getChallengesAuthored(userName)
+                }else {
+                    persistenceManager.getChallengesCompleted(userName)
+                }
             }else{
                 AbsentLiveData.create()
             }
@@ -59,10 +63,20 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
     }
 
     private fun updateChallenges(): LiveData<Resource<Int>> {
-        return challengeRequests.getAuthoredChallenges(userName, Date(0), refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
+        return when(type){
+            ChallengesViewModel.ChallengeTypes.COMPLETED -> challengeRequests.getCompletedChallenges(userName, Date(0), 0, refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
+            ChallengesViewModel.ChallengeTypes.AUTHORED -> challengeRequests.getAuthoredChallenges(userName, Date(0), refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
+        }
+
     }
 
-    fun isAuthored() = type == ChallengeTypes.AUTHORED
-    fun isCompleted() = type == ChallengeTypes.COMPLETED
+    fun setCompleted() {
+        type = ChallengeTypes.COMPLETED
+        query.value = System.currentTimeMillis()
+    }
+    fun setAuthored() {
+        type = ChallengeTypes.AUTHORED
+        query.value = System.currentTimeMillis()
+    }
 
 }

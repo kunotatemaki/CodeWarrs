@@ -7,6 +7,9 @@ import com.rukiasoft.codewars.persistence.entities.ChallengeTag
 
 class ChallengesToStore {
 
+    var pages: Int? = null
+    var items: Int? = null
+
     val challenge: MutableList<Challenge> = mutableListOf()
 
     val challengeLanguageAuthored: MutableList<ChallengeLanguageAuthored> = mutableListOf()

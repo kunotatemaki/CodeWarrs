@@ -67,6 +67,10 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
         return db.challengeDao().getNumberOfChallenges(userName, true)
     }
 
+    override fun getNumberChallengesCompleted(userName: String): LiveData<Int> {
+        return db.challengeDao().getNumberOfChallenges(userName, false)
+    }
+
     override fun insertChallenges(challengesToStore: ChallengesToStore) {
         db.challengeDao().insert(challengesToStore.challenge)
         db.challengeLanguageAuthoredDao().insert(challengesToStore.challengeLanguageAuthored)
