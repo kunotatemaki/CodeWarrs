@@ -156,7 +156,9 @@ class ChallengesActivity : BaseActivity() {
                                 //need to download more items
                                 Timber.d("descargo: %d %d", items, adapter.itemCount)
                                 if(isRefreshing.not()) {
-                                    viewModel.downloadNextPage()
+                                    if(viewModel.downloadNextPage().not()){
+                                        mBinding.noMore.visibility = View.VISIBLE
+                                    }
                                 }
                                 return
                             }

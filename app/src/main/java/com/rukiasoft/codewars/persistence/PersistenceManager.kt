@@ -22,9 +22,12 @@ interface PersistenceManager {
     fun getNumberChallengesAuthored(userName: String): LiveData<Int>
     fun insertChallenges(challengesToStore: ChallengesToStore)
     fun getNumberChallengesCompleted(userName: String): LiveData<Int>
+    fun getNumberChallengesCompletedWithoutLiveData(userName: String): Int
 
     fun storeInfoOfDownloadedAuthoredChallenges(authoredDate: Date, userName: String)
     fun storeInfoOfDownloadedCompletedChallenges(pages: Int?, items: Int?, completedDate:Date, userName: String)
+
+    fun setLastPageDownloaded(page: Int, userName: String)
 
     fun deleteDb()
 

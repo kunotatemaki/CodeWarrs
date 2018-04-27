@@ -72,6 +72,10 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
         return db.challengeDao().getNumberOfChallenges(userName, false)
     }
 
+    override fun getNumberChallengesCompletedWithoutLiveData(userName: String): Int {
+        return db.challengeDao().getNumberOfChallengesWithoutLiveData(userName, false)
+    }
+
     override fun insertChallenges(challengesToStore: ChallengesToStore) {
         db.challengeDao().insert(challengesToStore.challenge)
         db.challengeLanguageAuthoredDao().insert(challengesToStore.challengeLanguageAuthored)
@@ -87,9 +91,19 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
         db.userInfoDao().storeCompletedInfo(pages, items, completedDate, userName)
     }
 
+    override fun setLastPageDownloaded(page: Int, userName: String) {
+        db.userInfoDao().setLastPageDownloaded(page, userName)
+    }
+
     override fun deleteDb() {
 
         db.userInfoDao().deleteAll()
+        db.challengeTagDao().deleteAll()
+        db.challengeLanguageCompletedDao().deleteAll()
+        db.challengeLanguageAuthoredDao().deleteAll()
+        db.challengeDao().deleteAll()
+        db.languageDao().deleteAll()
+        db.skillDao().deleteAll()
 
     }
 

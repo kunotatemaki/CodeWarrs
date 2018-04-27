@@ -41,7 +41,9 @@ class UserInfo constructor(@PrimaryKey
                            @ColumnInfo(name = "n_page_completed")
                            var nPageCompleted: Int?,
                            @ColumnInfo(name = "n_items_completed")
-                           var nItemsCompleted: Int?
+                           var nItemsCompleted: Int?,
+                           @ColumnInfo(name = "last_page_downloaded")
+                           var lastPageDownloaded: Int
 
 ) {
 
@@ -49,7 +51,7 @@ class UserInfo constructor(@PrimaryKey
             user.userName!!, user.name, user.honor, user.clan, user.leaderBoardPosition,
             user.ranks?.overall?.rank, user.ranks?.overall?.name, user.ranks?.overall?.color,
             user.ranks?.overall?.score, date, null, null,
-            null, null)
+            null, null, 0)
 
     fun updateUserInfo(user: UserInfo) {
         userName = user.userName
@@ -79,6 +81,7 @@ class UserInfo constructor(@PrimaryKey
                 .and(nItemsCompleted == user.nItemsCompleted)
                 .and(nPageCompleted == user.nPageCompleted)
                 .and(overallScore == user.overallScore)
+                .and(lastPageDownloaded == user.lastPageDownloaded)
     }
 
 }

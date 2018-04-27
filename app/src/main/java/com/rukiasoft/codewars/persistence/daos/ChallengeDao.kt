@@ -36,6 +36,11 @@ abstract class ChallengeDao : BaseDao<Challenge> {
     fun getNumberOfChallenges(userName: String, authored: Boolean): LiveData<Int> =
             getNumberOfChallengesInternal(userName, authored).getDistinct()
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT COUNT(id) FROM challenge WHERE user_name LIKE :userName AND authored = :authored")
+    abstract fun getNumberOfChallengesWithoutLiveData(userName: String, authored: Boolean): Int
+
+
     @Query("DELETE FROM challenge_tag")
     abstract fun deleteAll()
 

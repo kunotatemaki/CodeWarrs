@@ -5,6 +5,7 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
+import com.rukiasoft.codewars.AppExecutors
 import com.rukiasoft.codewars.persistence.PersistenceManager
 import com.rukiasoft.codewars.persistence.entities.UserInfo
 import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
@@ -18,7 +19,8 @@ import java.util.*
 import javax.inject.Inject
 
 class ChallengesViewModel @Inject constructor(private val challengeRequests: ChallengeRequests,
-                                              private val persistenceManager: PersistenceManager) : ViewModel() {
+                                              private val persistenceManager: PersistenceManager,
+                                              private val appExecutors: AppExecutors) : ViewModel() {
 
     enum class ChallengeTypes {
         COMPLETED,
@@ -27,7 +29,7 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
 
     private var refresh = false
 
-    private var nextPageToDownload = 0
+    private var pageToDownload = 0
 
     val user: MediatorLiveData<UserInfo> = MediatorLiveData()
 
@@ -62,7 +64,6 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
             }
         }
 
-
     }
 
     fun resetRefresh() {
@@ -70,7 +71,7 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
     }
 
     fun setUserName(userName: String) {
-        nextPageToDownload = 0
+        pageToDownload = 0
         user.addSource(persistenceManager.getUserInfo(userName), {
             user.value = it
             if (nItemsTrigger.value == null) {
@@ -86,7 +87,7 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
         return when (type) {
             ChallengesViewModel.ChallengeTypes.COMPLETED -> challengeRequests.getCompletedChallenges(
                     user.value!!.userName, user.value!!.lastFetchedCompleted ?: Date(0),
-                    nextPageToDownload, refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
+                    pageToDownload, user.value!!.nPageCompleted ?: 0, refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
             ChallengesViewModel.ChallengeTypes.AUTHORED -> challengeRequests.getAuthoredChallenges(
                     user.value!!.userName, user.value!!.lastFetchedAuthored ?: Date(0),
                     refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
@@ -95,6 +96,7 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
 
     fun setCompleted() {
         type = ChallengeTypes.COMPLETED
+        pageToDownload = 0
         challengesTrigger.value = System.currentTimeMillis()
         nItemsTrigger.value = System.currentTimeMillis()
     }
@@ -107,6 +109,7 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
 
     fun refreshData() {
         refresh = true
+        pageToDownload = 0 //download page 0 -> most recent data
         nItemsTrigger.value = System.currentTimeMillis()
     }
 
@@ -114,14 +117,16 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
 
     fun getNumberOfCompletedChallenges() = user.value?.nItemsCompleted
 
-    fun downloadNextPage() {
+    fun downloadNextPage(): Boolean {
         user.value?.nPageCompleted?.let {
-            nextPageToDownload++
-            if (nextPageToDownload <= it) {
-                Timber.d("descargo %d ", nextPageToDownload)
+            pageToDownload = user.value!!.lastPageDownloaded + 1
+            if (pageToDownload <= it) {
+                Timber.d("descargo %d ", pageToDownload)
                 refresh = true
                 nItemsTrigger.value = System.currentTimeMillis()
+                return true
             }
         }
+        return false
     }
 }

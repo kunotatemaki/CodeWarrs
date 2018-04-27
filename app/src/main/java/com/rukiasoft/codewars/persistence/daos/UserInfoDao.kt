@@ -37,8 +37,11 @@ abstract class UserInfoDao: BaseDao<UserInfo>{
     @Query("UPDATE user_info SET last_fetched_completed = :authoredComplete, n_page_completed = :pages, n_items_completed = :items WHERE user_name LIKE :userName")
     abstract fun storeCompletedInfo(pages: Int?, items: Int?, authoredComplete: Date, userName: String)
 
+    @Query("UPDATE user_info SET last_page_downloaded = :page WHERE user_name LIKE :userName")
+    abstract fun setLastPageDownloaded(page: Int, userName: String)
 
     @Query("DELETE FROM user_info")
     abstract fun deleteAll()
+
 
 }
