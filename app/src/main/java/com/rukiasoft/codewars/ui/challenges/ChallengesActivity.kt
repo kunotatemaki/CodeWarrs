@@ -2,6 +2,7 @@ package com.rukiasoft.codewars.ui.challenges
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.rukiasoft.codewars.R
 import com.rukiasoft.codewars.databinding.ActivityChallengesBinding
 import com.rukiasoft.codewars.databinding.GlideBindingComponent
@@ -57,14 +59,21 @@ class ChallengesActivity : BaseActivity() {
 
         setUpRecycler()
 
+
         viewModel.setUserName(intent.getStringExtra(Constants.USER_NAME))
 
         viewModel.numberOfChallenges.observe(this, Observer {
             it?.let {
                 when (it.status) {
 
-                    Status.SUCCESS -> hideRefresh()
-                    Status.ERROR -> hideRefresh()
+                    Status.SUCCESS -> {
+                        viewModel.resetRefresh()
+                        hideRefresh()
+                    }
+                    Status.ERROR -> {
+                        viewModel.resetRefresh()
+                        hideRefresh()
+                    }
                     Status.LOADING -> showRefresh()
                 }
             }
@@ -77,12 +86,18 @@ class ChallengesActivity : BaseActivity() {
             }
         })
 
+        viewModel.user.observe(this, Observer {
+            it?.let {
+                //do nothing
+            }
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_challenges_screen, menu)
-        menuItem = menu?.findItem(R.id.action_refresh)
+        menuItem = menu.findItem(R.id.action_refresh)
         return true
     }
 
@@ -90,13 +105,14 @@ class ChallengesActivity : BaseActivity() {
         val id = item.itemId
 
         if (id == R.id.action_refresh) {
-
-            //force refresh
+            if (isRefreshing.not()) {
+                //force refresh
+                viewModel.refreshData()
+            }
             return true
         }
         return super.onOptionsItemSelected(item)
     }
-
 
     private fun setUpRecycler() {
 
@@ -124,6 +140,32 @@ class ChallengesActivity : BaseActivity() {
         })
 
         mRecyclerView.adapter = adapter
+
+        mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                val layoutManager = recyclerView!!.layoutManager as LinearLayoutManager
+                val lastPosition = layoutManager
+                        .findLastVisibleItemPosition()
+                if (lastPosition == adapter.itemCount - 1) {
+                    if (viewModel.isCompleted()) {
+                        //only request info for completed challenges. Authored don't came paginated
+                        val items = viewModel.getNumberOfCompletedChallenges()
+                        items?.let {
+                            if (items > adapter.itemCount) {
+                                //need to download more items
+                                if(isRefreshing.not()) {
+                                    viewModel.downloadNextPage()
+                                }
+                                return
+                            }
+                        }
+                    }
+                    Toast.makeText(this@ChallengesActivity.applicationContext,
+                            resourcesManager.getString(R.string.no_more_items), Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        })
 
 
     }

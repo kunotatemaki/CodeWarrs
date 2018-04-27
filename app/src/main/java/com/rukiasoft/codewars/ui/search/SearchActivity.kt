@@ -140,9 +140,9 @@ class SearchActivity : BaseActivity() {
         val adapter = SearchAdapter(
                 object : SearchAdapter.UserCallback {
                     override fun onClick(user: UserWithAllInfo?) {
-                        user?.let {user ->
+                        user?.user?.let {
                             val intent = Intent(this@SearchActivity, ChallengesActivity::class.java)
-                            intent.putExtra(Constants.USER_NAME, user.user?.userName)
+                            intent.putExtra(Constants.USER_NAME, it.userName)
                             startActivity(intent)
                         }
                     }

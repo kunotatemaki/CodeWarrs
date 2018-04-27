@@ -1,30 +1,35 @@
 package com.rukiasoft.codewars.ui.challenges
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import com.rukiasoft.codewars.persistence.PersistenceManager
+import com.rukiasoft.codewars.persistence.entities.UserInfo
 import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
 import com.rukiasoft.codewars.repository.ChallengeRequests
 import com.rukiasoft.codewars.utils.Constants
 import com.rukiasoft.codewars.utils.switchMap
 import com.rukiasoft.codewars.vo.AbsentLiveData
 import com.rukiasoft.codewars.vo.Resource
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 class ChallengesViewModel @Inject constructor(private val challengeRequests: ChallengeRequests,
                                               private val persistenceManager: PersistenceManager) : ViewModel() {
 
-    enum class ChallengeTypes{
+    enum class ChallengeTypes {
         COMPLETED,
         AUTHORED
     }
 
-    private var refresh = true
+    private var refresh = false
 
-    private var userName: String = ""
+    private var nextPageToDownload = 0
+
+    val user: MediatorLiveData<UserInfo> = MediatorLiveData()
 
     var type = ChallengeTypes.COMPLETED
 
@@ -37,46 +42,78 @@ class ChallengesViewModel @Inject constructor(private val challengeRequests: Cha
     init {
 
         numberOfChallenges = query.switchMap { _ ->
-            if(userName.isNotBlank()) {
+            if (user.value != null && user.value!!.userName.isNotBlank()) {
                 updateChallenges()
-            }else{
+            } else {
                 AbsentLiveData.create()
             }
         }
 
         challenges = query.switchMap { _ ->
-            if(userName.isNotBlank()) {
-                if(type == ChallengeTypes.AUTHORED) {
-                    persistenceManager.getChallengesAuthored(userName)
-                }else {
-                    persistenceManager.getChallengesCompleted(userName)
+            if (user.value != null && user.value!!.userName.isNotBlank()) {
+                if (type == ChallengeTypes.AUTHORED) {
+                    persistenceManager.getChallengesAuthored(user.value!!.userName)
+                } else {
+                    persistenceManager.getChallengesCompleted(user.value!!.userName)
                 }
-            }else{
+            } else {
                 AbsentLiveData.create()
             }
         }
     }
 
-    fun setUserName(userName: String){
-        this.userName = userName
-        query.value = System.currentTimeMillis()
+    fun resetRefresh() {
+        refresh = false
+    }
+
+    fun setUserName(userName: String) {
+        nextPageToDownload = 0
+        user.addSource(persistenceManager.getUserInfo(userName), {
+            user.value = it
+            if (query.value == null) {
+                query.value = System.currentTimeMillis()
+            }
+        })
     }
 
     private fun updateChallenges(): LiveData<Resource<Int>> {
-        return when(type){
-            ChallengesViewModel.ChallengeTypes.COMPLETED -> challengeRequests.getCompletedChallenges(userName, Date(0), 0, refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
-            ChallengesViewModel.ChallengeTypes.AUTHORED -> challengeRequests.getAuthoredChallenges(userName, Date(0), refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
+        return when (type) {
+            ChallengesViewModel.ChallengeTypes.COMPLETED -> challengeRequests.getCompletedChallenges(
+                    user.value!!.userName, user.value!!.lastFetchedCompleted ?: Date(0),
+                    nextPageToDownload, refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
+            ChallengesViewModel.ChallengeTypes.AUTHORED -> challengeRequests.getAuthoredChallenges(
+                    user.value!!.userName, user.value!!.lastFetchedAuthored ?: Date(0),
+                    refresh, Constants.DEFAULT_NUMBER_OF_RETRIES)
         }
-
     }
 
     fun setCompleted() {
         type = ChallengeTypes.COMPLETED
         query.value = System.currentTimeMillis()
     }
+
     fun setAuthored() {
         type = ChallengeTypes.AUTHORED
         query.value = System.currentTimeMillis()
     }
 
+    fun refreshData() {
+        refresh = true
+        query.value = System.currentTimeMillis()
+    }
+
+    fun isCompleted() = type == ChallengeTypes.COMPLETED
+
+    fun getNumberOfCompletedChallenges() = user.value?.nItemsCompleted
+
+    fun downloadNextPage() {
+        user.value?.nPageCompleted?.let {
+            nextPageToDownload++
+            if (nextPageToDownload <= it) {
+                Timber.d("descargo %d ", nextPageToDownload)
+                refresh = true
+                query.value = System.currentTimeMillis()
+            }
+        }
+    }
 }
