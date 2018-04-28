@@ -1,4 +1,4 @@
-package com.firefly.studentplanner.utils.preferences
+package com.rukiasoft.codewars.preferences
 
 /**
  * Created by Raul on 17/11/2017.

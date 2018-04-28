@@ -1,8 +1,7 @@
-package com.firefly.studentplanner.utils.preferences
+package com.rukiasoft.codewars.preferences
 
-import com.firefly.studentplanner.utils.preferences.CodeWarsPreferencesConstants.DB_VERSION
-import com.firefly.studentplanner.utils.preferences.CodeWarsPreferencesConstants.FETCHED_DATE_USER_INFO
-import com.rukiasoft.codewars.preferences.PreferencesManager
+import com.rukiasoft.codewars.preferences.CodeWarsPreferencesConstants.DB_VERSION
+import com.rukiasoft.codewars.preferences.CodeWarsPreferencesConstants.FETCHED_DATE_USER_INFO
 import javax.inject.Inject
 
 /**

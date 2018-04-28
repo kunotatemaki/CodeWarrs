@@ -4,8 +4,8 @@ import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import com.firefly.studentplanner.utils.preferences.CodeWarsPreferences
-import com.firefly.studentplanner.utils.preferences.CodeWarsPreferencesImpl
+import com.rukiasoft.codewars.preferences.CodeWarsPreferences
+import com.rukiasoft.codewars.preferences.CodeWarsPreferencesImpl
 import com.rukiasoft.codewars.CodeWarsApplicationBase
 import com.rukiasoft.codewars.persistence.PersistenceManager
 import com.rukiasoft.codewars.persistence.PersistenceManagerImpl
