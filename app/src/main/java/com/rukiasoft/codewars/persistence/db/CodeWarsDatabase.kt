@@ -9,7 +9,7 @@ import com.rukiasoft.codewars.persistence.utils.Converters
 
 @Database(entities = [(UserInfo::class), (Language::class), (Skill::class),
     (Challenge::class), (ChallengeLanguageAuthored::class), (ChallengeLanguageCompleted::class),
-    (ChallengeTag::class)],
+    (ChallengeTag::class), (Details::class)],
         version = 1)
 @TypeConverters(Converters::class)
 abstract class CodeWarsDatabase : RoomDatabase() {
@@ -20,4 +20,5 @@ abstract class CodeWarsDatabase : RoomDatabase() {
     abstract fun challengeTagDao(): ChallengeTagDao
     abstract fun challengeLanguageCompletedDao(): ChallengeLanguageCompletedDao
     abstract fun challengeLanguageAuthoredDao(): ChallengeLanguageAuthoredDao
+    abstract fun detailsDao(): DetailsDao
 }

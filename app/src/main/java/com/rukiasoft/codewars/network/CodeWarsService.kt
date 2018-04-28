@@ -3,6 +3,7 @@ package com.firefly.studentplanner.network
 import android.arch.lifecycle.LiveData
 import com.rukiasoft.codewars.network.ApiResponse
 import com.rukiasoft.codewars.repository.ChallengeFromServer
+import com.rukiasoft.codewars.repository.DetailsFromServer
 import com.rukiasoft.codewars.repository.UserInfoFromServer
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -23,8 +24,11 @@ interface CodeWarsService {
     @GET("/api/v1/users/{username}/code-challenges/authored")
     fun getAuthoredChallenges(@Path("username") userName: String): LiveData<ApiResponse<ChallengeFromServer>>
 
-@GET("/api/v1/users/{username}/code-challenges/completed")
+    @GET("/api/v1/users/{username}/code-challenges/completed")
     fun getCompletedChallenges(@Path("username") userName: String, @Query("page") page: Int): LiveData<ApiResponse<ChallengeFromServer>>
+
+    @GET("/api/v1/code-challenges/{id}")
+    fun getDetails(@Path("id") id: String): LiveData<ApiResponse<DetailsFromServer>>
 
 
 }

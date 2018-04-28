@@ -18,6 +18,7 @@ import com.rukiasoft.codewars.databinding.ActivityChallengesBinding
 import com.rukiasoft.codewars.databinding.GlideBindingComponent
 import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
 import com.rukiasoft.codewars.ui.common.BaseActivity
+import com.rukiasoft.codewars.ui.details.DetailsActivity
 import com.rukiasoft.codewars.utils.Constants
 import com.rukiasoft.codewars.vo.Status
 import kotlinx.android.synthetic.main.activity_challenges.*
@@ -74,6 +75,8 @@ class ChallengesActivity : BaseActivity() {
                     Status.ERROR -> {
                         viewModel.resetRefresh()
                         hideRefresh()
+                        Toast.makeText(this@ChallengesActivity.applicationContext,
+                                resourcesManager.getString(R.string.outdated), Toast.LENGTH_SHORT).show()
                     }
                     Status.LOADING -> showRefresh()
                 }
@@ -134,8 +137,10 @@ class ChallengesActivity : BaseActivity() {
         //add the adapter
         val adapter = ChallengeAuthoredAdapter(object : ChallengeAuthoredAdapter.ChallengeClickCallback {
             override fun onClick(challenge: ChallengeWithAllInfo?) {
-                challenge?.let {
-                    Timber.d("")
+                challenge?.challenge?.id?.let {
+                    val intent = Intent(this@ChallengesActivity, DetailsActivity::class.java)
+                    intent.putExtra(Constants.CHALLENGE_ID, it)
+                    startActivity(intent)
                 }
             }
         })

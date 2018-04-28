@@ -2,6 +2,7 @@ package com.rukiasoft.codewars.persistence
 
 import android.arch.lifecycle.LiveData
 import android.arch.paging.PagedList
+import com.rukiasoft.codewars.persistence.entities.Details
 import com.rukiasoft.codewars.persistence.entities.UserInfo
 import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
@@ -28,6 +29,9 @@ interface PersistenceManager {
     fun storeInfoOfDownloadedCompletedChallenges(pages: Int?, items: Int?, completedDate:Date, userName: String)
 
     fun setLastPageDownloaded(page: Int, userName: String)
+
+    fun getDetails(id: String): LiveData<Details>
+    fun insertDetails(details: Details)
 
     fun deleteDb()
 

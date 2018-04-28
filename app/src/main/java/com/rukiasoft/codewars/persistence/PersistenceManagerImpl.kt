@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.rukiasoft.codewars.persistence.db.CodeWarsDatabase
+import com.rukiasoft.codewars.persistence.entities.Details
 import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
 import com.rukiasoft.codewars.persistence.utils.ChallengesToStore
@@ -95,6 +96,12 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
         db.userInfoDao().setLastPageDownloaded(page, userName)
     }
 
+    override fun getDetails(id: String) = db.detailsDao().getDetails(id)
+
+    override fun insertDetails(details: Details) {
+        db.detailsDao().insert(details)
+    }
+
     override fun deleteDb() {
 
         db.userInfoDao().deleteAll()
@@ -104,7 +111,7 @@ class PersistenceManagerImpl @Inject constructor(private val db: CodeWarsDatabas
         db.challengeDao().deleteAll()
         db.languageDao().deleteAll()
         db.skillDao().deleteAll()
-
+        db.detailsDao().deleteAll()
     }
 
 }

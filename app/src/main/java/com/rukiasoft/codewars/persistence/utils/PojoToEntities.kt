@@ -3,6 +3,7 @@ package com.rukiasoft.codewars.persistence.utils
 import com.rukiasoft.codewars.persistence.entities.*
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
 import com.rukiasoft.codewars.repository.ChallengeFromServer
+import com.rukiasoft.codewars.repository.DetailsFromServer
 import com.rukiasoft.codewars.repository.UserInfoFromServer
 import com.rukiasoft.codewars.utils.DateUtils
 
@@ -32,6 +33,13 @@ object PojoToEntities {
             }
             userWithAllInfo.languages = languages
             return userWithAllInfo
+        }
+        return null
+    }
+
+    fun getDetailsFromServerResponse(server: DetailsFromServer): Details? {
+        server.id?.let {
+            return Details(server)
         }
         return null
     }

@@ -19,4 +19,5 @@
     <string name="title_authored">Authored</string>
     <string name="refresh">Refresh</string>
     <string name="no_more_items">No more items to show</string>
+    <string name="outdated">Info outdated</string>
 </resources>

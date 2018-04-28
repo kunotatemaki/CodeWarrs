@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.rukiasoft.codewars.di.interfaces.ViewModelKey
 import com.rukiasoft.codewars.ui.challenges.ChallengesViewModel
+import com.rukiasoft.codewars.ui.details.DetailsViewModel
 import com.rukiasoft.codewars.ui.search.SearchViewModel
 import com.rukiasoft.codewars.viewmodel.CodeWarsViewModelFactory
 import dagger.Binds
@@ -27,6 +28,11 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ChallengesViewModel::class)
     internal abstract fun bindChallengesViewModel(challengesViewModel: ChallengesViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetailsViewModel::class)
+    internal abstract fun bindDetailsViewModel(detailsViewModel: DetailsViewModel): ViewModel
 
 
     @Binds
