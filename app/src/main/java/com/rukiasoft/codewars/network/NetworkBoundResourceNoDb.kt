@@ -1,11 +1,10 @@
-package com.firefly.studentplanner.network
+package com.rukiasoft.codewars.network
 
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import com.rukiasoft.codewars.vo.Resource
-import com.rukiasoft.codewars.network.ApiResponse
 
 /**
  * Created by Roll on 4/10/17.

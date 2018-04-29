@@ -1,4 +1,4 @@
-package com.firefly.studentplanner.di.interfaces
+package com.rukiasoft.codewars.di.interfaces
 
 import javax.inject.Scope
 

@@ -2,8 +2,8 @@ package com.rukiasoft.codewars.repository
 
 
 import android.arch.lifecycle.LiveData
-import com.firefly.studentplanner.network.CodeWarsService
-import com.firefly.studentplanner.network.NetworkConstants
+import com.rukiasoft.codewars.network.CodeWarsService
+import com.rukiasoft.codewars.network.NetworkConstants
 import com.rukiasoft.codewars.AppExecutors
 import com.rukiasoft.codewars.network.ApiResponse
 import com.rukiasoft.codewars.network.CodeWarsServiceFactory
@@ -11,11 +11,9 @@ import com.rukiasoft.codewars.network.NetworkBoundResource
 import com.rukiasoft.codewars.persistence.PersistenceManager
 import com.rukiasoft.codewars.persistence.entities.UserInfo
 import com.rukiasoft.codewars.persistence.utils.PojoToEntities
-import com.rukiasoft.codewars.utils.DateUtils
 import com.rukiasoft.codewars.utils.RateLimiter
 import com.rukiasoft.codewars.vo.AbsentLiveData
 import com.rukiasoft.codewars.vo.Resource
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton

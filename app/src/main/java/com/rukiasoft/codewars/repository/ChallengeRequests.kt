@@ -2,8 +2,8 @@ package com.rukiasoft.codewars.repository
 
 
 import android.arch.lifecycle.LiveData
-import com.firefly.studentplanner.network.CodeWarsService
-import com.firefly.studentplanner.network.NetworkConstants
+import com.rukiasoft.codewars.network.CodeWarsService
+import com.rukiasoft.codewars.network.NetworkConstants
 import com.rukiasoft.codewars.AppExecutors
 import com.rukiasoft.codewars.network.ApiResponse
 import com.rukiasoft.codewars.network.CodeWarsServiceFactory

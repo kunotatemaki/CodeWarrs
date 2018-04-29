@@ -1,6 +1,6 @@
 package com.rukiasoft.codewars.di.modules
 
-import com.firefly.studentplanner.di.interfaces.CustomScopes
+import com.rukiasoft.codewars.di.interfaces.CustomScopes
 import com.rukiasoft.codewars.ui.challenges.ChallengesActivity
 import com.rukiasoft.codewars.ui.details.DetailsActivity
 import com.rukiasoft.codewars.ui.search.SearchActivity

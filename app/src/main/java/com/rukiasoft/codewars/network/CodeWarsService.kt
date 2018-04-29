@@ -1,4 +1,4 @@
-package com.firefly.studentplanner.network
+package com.rukiasoft.codewars.network
 
 import android.arch.lifecycle.LiveData
 import com.rukiasoft.codewars.network.ApiResponse

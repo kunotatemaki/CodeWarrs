@@ -1,4 +1,4 @@
-package com.firefly.studentplanner.network
+package com.rukiasoft.codewars.network
 
 /**
  * Created by Roll on 19/11/17.

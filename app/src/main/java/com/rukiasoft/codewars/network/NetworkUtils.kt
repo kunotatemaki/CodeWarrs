@@ -1,4 +1,4 @@
-package com.firefly.studentplanner.network
+package com.rukiasoft.codewars.network
 
 import android.content.Context
 import android.net.ConnectivityManager
