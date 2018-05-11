@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean
 import com.google.gson.Gson
 import com.rukiasoft.codewars.persistence.PersistenceManager
+import com.rukiasoft.codewars.persistence.entities.UserInfo
 import com.rukiasoft.codewars.persistence.relations.UserWithAllInfo
 import com.rukiasoft.codewars.repository.UserInfoError
 import com.rukiasoft.codewars.repository.UserInfoRequests
@@ -27,9 +28,13 @@ class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfo
 
     val users: LiveData<List<UserWithAllInfo>>
 
+
+
     var userInfo: MediatorLiveData<Resource<Void>> = MediatorLiveData()
 
     var usersByDate = true
+
+    var info: LiveData<Resource<UserInfo>>? = null
 
     init {
         searchCardVisible.set(false)
@@ -41,14 +46,14 @@ class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfo
     }
 
     fun search(name: String) {
-        val info = userInfoRequests.downloadUserInfo(name, Constants.DEFAULT_NUMBER_OF_RETRIES)
-        userInfo.addSource(info, {
+        info?.let { userInfo.removeSource(info!!) }
+        info = userInfoRequests.downloadUserInfo(name, Constants.DEFAULT_NUMBER_OF_RETRIES)
+        userInfo.addSource(info!!, {
             it?.let { response ->
                 when (response.status) {
 
                     Status.SUCCESS -> {
                         userInfo.value = Resource.success(null)
-                        //userInfo.removeSource(info)
                     }
                     Status.ERROR -> {
                         val message = try {
@@ -58,7 +63,6 @@ class SearchViewModel @Inject constructor(private val userInfoRequests: UserInfo
                             ""
                         }
                         userInfo.value = Resource.error(message, null)
-                        userInfo.removeSource(info)
                     }
                     Status.LOADING -> {
                         userInfo.value = Resource.loading(null)

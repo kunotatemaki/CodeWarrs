@@ -5,7 +5,6 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
-import com.rukiasoft.codewars.AppExecutors
 import com.rukiasoft.codewars.persistence.PersistenceManager
 import com.rukiasoft.codewars.persistence.entities.UserInfo
 import com.rukiasoft.codewars.persistence.relations.ChallengeWithAllInfo
@@ -19,8 +18,7 @@ import java.util.*
 import javax.inject.Inject
 
 class ChallengesViewModel @Inject constructor(private val challengeRequests: ChallengeRequests,
-                                              private val persistenceManager: PersistenceManager,
-                                              private val appExecutors: AppExecutors) : ViewModel() {
+                                              private val persistenceManager: PersistenceManager) : ViewModel() {
 
     enum class ChallengeTypes {
         COMPLETED,

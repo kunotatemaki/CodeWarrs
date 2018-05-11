@@ -237,7 +237,7 @@ class SearchActivity : BaseActivity() {
 
     override fun onBackPressed() {
         if (viewModel.searchCardVisible.get()) {
-            viewModel.animateFab.value = true
+            sendToSearch()
         } else {
             super.onBackPressed()
         }

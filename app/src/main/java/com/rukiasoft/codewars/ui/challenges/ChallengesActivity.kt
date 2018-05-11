@@ -31,7 +31,7 @@ class ChallengesActivity : BaseActivity() {
     private lateinit var mRecyclerView: RecyclerView
 
     private var menuItem: MenuItem? = null
-    protected var isRefreshing = false
+    private var isRefreshing = false
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -154,7 +154,7 @@ class ChallengesActivity : BaseActivity() {
                         .findLastVisibleItemPosition()
                 if (lastPosition == adapter.itemCount - 1) {
                     if (viewModel.isCompleted()) {
-                        //only request info for completed challenges. Authored don't came paginated
+                        //only request info for completed challenges. Authored don't come paginated
                         val items = viewModel.getNumberOfCompletedChallenges()
                         items?.let {
                             if (items > adapter.itemCount) {
@@ -170,7 +170,7 @@ class ChallengesActivity : BaseActivity() {
                         }
                     }
                     if(adapter.itemCount > 0) {
-                        mBinding.noMore.visibility = View.VISIBLE
+                         mBinding.noMore.visibility = View.VISIBLE
                     }
                 }else{
                     if(mBinding.noMore.visibility == View.VISIBLE){

@@ -1,9 +1,6 @@
 package com.rukiasoft.codewars.persistence.entities
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 
 /**
  * Created by Roll on 21/11/17.
@@ -12,12 +9,12 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "skill", indices = [(Index(value = arrayOf("user_name", "skill"), unique = true))])
 class Skill constructor(@PrimaryKey(autoGenerate = true)
-                         @ColumnInfo(name = "id")
-                         val id: Int?,
+                        @ColumnInfo(name = "id")
+                        val id: Int?,
                         @ColumnInfo(name = "skill")
-                         val skill: String,
+                        val skill: String,
                         @ColumnInfo(name = "user_name")
-                         val userName: String
+                        val userName: String
 ) {
 
 
